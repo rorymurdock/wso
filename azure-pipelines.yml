@@ -16,7 +16,7 @@ pool:
 steps:
 - script: |
     python3 -m pip install --upgrade pip
-    python3 -m pip install pytest pytest-azurepipelines
+    python3 -m pip install --user pytest pytest-azurepipelines
   displayName: 'Install dependencies'
 
 - script: |         
