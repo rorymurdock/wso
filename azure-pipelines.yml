@@ -14,6 +14,11 @@ steps:
   displayName: 'Run a one-line script'
 
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest Tests/
-  displayName: 'Run unit tests'
+    python -m pip install --upgrade pip
+    python -m pip install pytest pytest-azurepipelines
+    python -m pip install 
+  displayName: 'Install dependencies'
+
+- script: |         
+   pytest Tests/
+  displayName: 'Run tests'
