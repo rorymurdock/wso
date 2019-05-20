@@ -1,7 +1,4 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Run Pytest on test files for multiple python versions
 
 trigger:
 - master
@@ -10,6 +7,8 @@ pool:
   vmImage: 'ubuntu-latest'
   strategy:
     matrix:
+      Python3.6:
+        python.version: '3.6'
       Python3.7:
         python.version: '3.7'
 
