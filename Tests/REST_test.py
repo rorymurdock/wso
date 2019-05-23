@@ -92,7 +92,7 @@ def test_custom_header():
 
     headers = {header_key: header_content}
 
-    rest = REST(url='postman-echo.com', headers=headers)
+    rest = REST(url='postman-echo.com', headers=headers, debug=True)
 
     response = json.loads(rest.get('/headers').text)
 

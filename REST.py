@@ -18,9 +18,6 @@ class REST():
         if isinstance(headers, dict):
             self.sessions.headers.update(headers)
 
-        if debug:
-            print(self.sessions.headers)
-
         retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
         self.sessions.mount('https://', HTTPAdapter(max_retries=retries))
 
