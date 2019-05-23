@@ -1,4 +1,5 @@
 # WSO-UEM-Py
-[![Build Status](https://rorymurdock.visualstudio.com/Python%20Pipelines/_apis/build/status/rorymurdock.WSO-UEM-Py?branchName=master)](https://rorymurdock.visualstudio.com/Python%20Pipelines/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://travis-ci.org/rorymurdock/WSO-UEM-Py.svg?branch=master)](https://travis-ci.org/rorymurdock/WSO-UEM-Py)[![Documentation Status](https://readthedocs.org/projects/wso-uem-py/badge/?version=latest)](https://wso-uem-py.readthedocs.io/en/latest/?badge=latest)
+[![Coverage Status](https://coveralls.io/repos/github/rorymurdock/WSO-UEM-Py/badge.svg?branch=master)](https://coveralls.io/github/rorymurdock/WSO-UEM-Py?branch=master)
 
 A Python framework for interacting with WSO UEM
