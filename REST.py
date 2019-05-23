@@ -8,7 +8,7 @@ from urllib3.util import Retry
 class REST():
 
     # Add the varibles as self.
-    def __init__(self, service=None, url='', headers=None, proxy=None, debug=False):
+    def __init__(self, url='', headers=None, proxy=None, debug=False):
         # Import Proxy Server settings
         self.proxies = proxy
         self.url = url
@@ -30,25 +30,25 @@ class REST():
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
 
-    # HTTP GET, returns HTTP response
+    # HTTP GET, returns HTTP response object
     def get(self, path):
         connection = self.sessions.get(
             'https://'+self.url+path, proxies=self.proxies)
         return connection
 
-    # HTTP POST, returns HTTP response as str
+    # HTTP POST, returns HTTP response object
     def post(self, path, payload):
         connection = self.sessions.post(
             'https://'+self.url+path, json=payload, proxies=self.proxies)
         return connection
 
-    # HTTP PUT, returns HTTP response as str
+    # HTTP PUT, returns HTTP response object
     def put(self, path, payload):
         connection = self.sessions.put(
             'https://'+self.url+path, data=payload, proxies=self.proxies)
         return connection
 
-    # HTTP DELETE, returns HTTP response as str
+    # HTTP DELETE, returns HTTP response object
     def delete(self, path):
         connection = self.sessions.delete(
             'https://'+self.url+path, proxies=self.proxies)
