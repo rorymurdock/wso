@@ -1,0 +1,23 @@
+# Run Pytest on test files for multiple python versions
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+  strategy:
+    matrix:
+      Python3.6:
+        python.version: '3.6'
+      Python3.7:
+        python.version: '3.7'
+
+steps:
+- script: |
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --user pytest pytest-azurepipelines
+  displayName: 'Install dependencies'
+
+- script: |         
+   python3 -m pytest Tests/
+  displayName: 'Run tests'
