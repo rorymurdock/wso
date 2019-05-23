@@ -15,11 +15,11 @@ class REST():
 
         # Start the session
         self.sessions = requests.Session()
-        if isinstance(headers, str):
+        if isinstance(headers, dict):
             self.sessions.headers.update(headers)
 
         if debug:
-            print(headers)
+            print(self.sessions.headers)
 
         retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
         self.sessions.mount('https://', HTTPAdapter(max_retries=retries))
@@ -60,7 +60,4 @@ class REST():
     def response_headers(self, path):
         connection = self.sessions.get(
             'https://'+self.url+path, proxies=self.proxies)
-        if connection.status_code == 200:
-            return connection.headers
-        else:
-            return None
+        return connection.headers
