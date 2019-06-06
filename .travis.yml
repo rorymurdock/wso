@@ -9,6 +9,7 @@ install:
 
 # command to run tests
 script:
+  - python setup_args.py -url $aw_url -username $aw_username -password $aw_password  -tenantcode $aw_tenantcode
   - python -m pytest Tests/ --cov=./
 after_success:
   - coveralls
