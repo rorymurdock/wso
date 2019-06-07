@@ -5,6 +5,4 @@
 [![Coverage Status](https://coveralls.io/repos/github/rorymurdock/WSO-UEM-Py/badge.svg?branch=master)](https://coveralls.io/github/rorymurdock/WSO-UEM-Py?branch=master)
 [![Requirements Status](https://requires.io/github/rorymurdock/WSO-UEM-Py/requirements.svg?branch=UEM-API)](https://requires.io/github/rorymurdock/WSO-UEM-Py/requirements/?branch=UEM-API)
 
-
-
 A Python framework for interacting with WSO UEM
