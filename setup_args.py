@@ -45,3 +45,5 @@ if not SETUP.write_proxy_config(
     ):
     print("Fatal error writing config")
     os.sys.exit(1)
+
+# https://docs.pytest.org/en/latest/parametrize.html#basic-pytest-generate-tests-example

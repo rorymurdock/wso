@@ -12,6 +12,7 @@ class REST():
         # Import Proxy Server settings
         self.proxies = proxy
         self.url = url
+        self.debug = debug
 
         # Start the session
         self.sessions = requests.Session()
@@ -22,7 +23,7 @@ class REST():
         self.sessions.mount('https://', HTTPAdapter(max_retries=retries))
 
         # Debugging
-        if debug:
+        if self.debug:
             print('API URL: %s' % self.url)
             logging.basicConfig()
             logging.getLogger().setLevel(logging.DEBUG)

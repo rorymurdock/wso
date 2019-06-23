@@ -6,12 +6,12 @@ import base64
 ## This will setup your proxy and credentials json files
 class ConfigSetup():
     """Class for setting up config"""
-    def __init__(self, overwrite=False):
+    def __init__(self, overwrite=False, config_dir="config", auth_file="uem.json", proxy_file="proxy.json"):
         ## Config paths
         self.overwrite = overwrite
-        self.config_dir = "config"
-        self.auth_file = "uem.json"
-        self.proxy_file = "proxy.json"
+        self.config_dir = config_dir
+        self.auth_file = auth_file
+        self.proxy_file = proxy_file
         self.proxy = None
         self.proxy_server = None
         self.proxy_port = None
@@ -23,9 +23,11 @@ class ConfigSetup():
         """Returns config file names"""
         return {self.auth_file, self.proxy_file}
 
-    def check_config_dir_exists(self):
+    def check_config_dir_exists(self, directory=None):
         """Checks if the config exists"""
-        return os.path.isdir(self.config_dir)
+        if directory is None:
+            directory = self.config_dir
+        return os.path.isdir(directory)
 
     def create_config_directory(self):
         """Create config directory"""

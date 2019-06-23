@@ -6,6 +6,7 @@ import base64
 import string
 import random
 from setup import ConfigSetup
+#TODO: Setup main tests and stdin tests
 
 SETUP = ConfigSetup(overwrite=True)
 
@@ -96,8 +97,6 @@ def test_set_auth_config():
     )
     authorization = "Basic "+encoded_credentials.decode('utf-8')
 
-
-
     assert SETUP.write_auth_config(url, authorization, tenantcode) is True
     assert SETUP.verify_config("uem.json", "url", url) is True
     assert SETUP.verify_config("uem.json", "Authorization", authorization) is True
@@ -107,13 +106,31 @@ def test_set_all_config_existing():
     """Writes all config to files"""
     assert SETUP.set_config() is True
 
-def test_cleanup_tests():
-    """Deletes all files created during testing"""
-    files = ("testing", "readonly", "proxy.json", "uem.json")
+def test_unwriteable_dir():
+    assert ConfigSetup(overwrite=True, config_dir='/').create_config_directory() is False
 
-    for file in files:
-        os.remove("config/"+file)
-        assert SETUP.check_file_exists(file) is False
+def test_write_config_no_folder():
+    assert ConfigSetup(overwrite=True, config_dir='/').write_config(None, 'CI Tests') is False
+
+#TODO create_config_directory()
+#TODO write_config() 
+
+# def test_cleanup_tests():
+#     """Deletes all files created during testing"""
+#     files = ("testing", "readonly", "proxy.json", "uem.json")
+#     directories = ("config", "config/bad_config", "config/proxy_config")
+    
+#     for directory in directories:
+#         temp_setup = ConfigSetup(config_dir=directory)
+#         for file in files:
+#             if temp_setup.check_file_exists(file):
+#                 os.remove("%s/%s" % (directory, file))
+#             assert temp_setup.check_file_exists(file) is False
+#         if temp_setup.check_config_dir_exists():
+#             os.rmdir(directory)
+#         assert SETUP.check_config_dir_exists(directory) is False
+    
+
 
 # TODO: Try mock to do user input
 # def test_set_all_config_fresh():

@@ -6,7 +6,7 @@ from REST import REST
 # Thanks to https://postman-echo.com
 # For the demo REST API
 
-rest = REST(url='postman-echo.com')
+rest = REST(url='postman-echo.com', debug=True)
 
 # Generate random data for testing
 def randomString(stringLength=15):
