@@ -3,7 +3,6 @@ import os
 import argparse
 from setup import ConfigSetup
 
-# Cause test to fail http://layer7p.gss.woolworths.com.au:9080/
 PARSER = argparse.ArgumentParser()
 
 REQUIRED = PARSER.add_argument_group('Required arguments')
@@ -20,13 +19,6 @@ ARGS = PARSER.parse_args()
 SETUP = ConfigSetup()
 
 print("Writing auth")
-
-# print(ARGS.url,
-#         SETUP.encode_credential(
-#         ARGS.username,
-#         ARGS.password).decode('utf-8'),
-#         ARGS.tenantcode
-#    )
 
 if not SETUP.write_auth_config(
         ARGS.url,
@@ -45,5 +37,3 @@ if not SETUP.write_proxy_config(
     ):
     print("Fatal error writing config")
     os.sys.exit(1)
-
-# https://docs.pytest.org/en/latest/parametrize.html#basic-pytest-generate-tests-example

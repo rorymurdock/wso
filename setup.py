@@ -190,7 +190,7 @@ class ConfigSetup():
                 tenantcode=self.tenantcode
                 )
 
-if __name__ == "Main":
+if __name__ == "__main__":
     # Init class
     SETUP = ConfigSetup()
 

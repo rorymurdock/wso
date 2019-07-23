@@ -1,2 +1,2 @@
 [run]
-omit = setup_args.py
+omit = setup_args.py, uem_version.py
