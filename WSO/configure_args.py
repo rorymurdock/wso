@@ -1,7 +1,7 @@
 """Uses config setup but with arguments"""
 import os
 import argparse
-from setup import ConfigSetup
+from configure import ConfigSetup
 
 PARSER = argparse.ArgumentParser()
 

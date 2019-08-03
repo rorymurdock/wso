@@ -1,2 +1,9 @@
 [run]
-omit = setup_args.py, uem_version.py
+omit =  WSO/configure_args.py
+        WSO/uem_version.py
+        setup.py
+
+[report]
+omit =  WSO/configure_args.py
+        WSO/uem_version.py
+        setup.py

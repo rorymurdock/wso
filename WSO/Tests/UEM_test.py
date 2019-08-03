@@ -1,14 +1,14 @@
 """Performs built tests for the UEM Module"""
+import re
+import json
 import string
 import random
 import pytest
 from reqREST import REST
-from UEM import UEM
-from setup import ConfigSetup
+from WSO.UEM import UEM
+from WSO.configure import ConfigSetup
 
 ## Define CI Test items
-# Expected AW version
-AIRWATCH_VERSION = '19.8.0.0'
 
 # Root OG
 ROOT_OG = "pytest"
@@ -32,6 +32,38 @@ PRODUCT_PLATFORM_ID = 5
 TEST_DEVICE_SERIAL = 17142522504057
 TEST_DEVICE_IP = '172.16.0.143'
 TEST_DEVICE_ID = 14229
+
+# Get AW version from API help page
+##
+with open('config/uem.json') as json_file:
+    url = json.load(json_file)['url']
+
+# Create REST instance
+rest = REST(url=url)
+
+# At some stage the version file changed, try both
+urls = ['/api/help/local.json', '/api/system/help/localjson']
+
+# Try the first URL
+response = rest.get(urls[0])
+
+# If that 404's try the second URL
+if response.status_code == 404:
+    response = rest.get(urls[1])
+
+# If this 200 OKs
+if response.status_code == 200:
+    # Get the text, parse is
+    versions = json.loads(response.text)
+    version = versions['apis'][0]['products'][0]
+
+    # Regex it to remove AirWatch and VMWare Workspace ONE UEM strings
+    # Leaving just the version number
+    AIRWATCH_VERSION = re.match(
+        r'(AirWatch|VMware Workspace ONE UEM);(.*)',
+        version,
+        re.M|re.I
+        ).group(2)
 
 AW = UEM(debug=True)
 

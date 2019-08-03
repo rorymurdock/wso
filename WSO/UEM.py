@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import time
+from .configure import ConfigSetup
 from reqREST import REST
 
 # In the event UEM has support for API v1 & 2
@@ -113,8 +114,14 @@ class UEM():
             with open(self.config_dir+'/'+file) as json_file:
                 return json.load(json_file)
         else:
-            print("Unable to open config file, run setup.py")
+            print("Unable to open config file, run configure.py")
             sys.exit(1)
+            #TODO Setup config during init
+            # ConfigSetup().set_config()
+            # if os.path.isfile(self.config_dir+"/"+file):
+            #     with open(self.config_dir+'/'+file) as json_file:
+            #         return json.load(json_file)
+
 
     # Import proxy from config file
     def import_proxy(self):
@@ -134,7 +141,7 @@ class UEM():
         return proxies
 
     # Combine varibles to form headers
-    def create_headers(self, config, version):
+    def create_headers(self, config, version=2):
         """Creates headers for REST API Call using config and version"""
         self.debug_print("Using API Version: %s" % version)
         headers = {
@@ -301,7 +308,7 @@ class UEM():
     def product_is_active(self, product_id):
         """Checks if a product is active, returns BOOL"""
         response = self.basic_url('/api/mdm/products/%s' % product_id)
-        print('RES: %s' % response[0]['Active'])
+
         if response[0] is not False:
             if response[0]['Active'] is True:
                 self.debug_print('Product %s is active' % product_id)
@@ -332,9 +339,10 @@ class UEM():
         if self.check_http_response(response.status_code) is not False:
             print(response)
             return True
-        else:
+        else: # pragma: no cover
             print('Error trying to %s product %i' % (action, product_id))
             return False
+         #TODO: fix issue with auto act/deact set in console
 
     def activate_product(self, product_id, skip_check=False):
         """Activates a product"""
@@ -534,7 +542,7 @@ class UEM():
         if self.check_http_response(response.status_code):
             print('Group %s created successfully, id: %s' % (name, self.str_to_json(response.text)['Value']))
             return self.Response(success=True, id=self.str_to_json(response.text)['Value'])
-        else:
+        else: # pragma: no cover
             print('Error creating group %s' % name)
             return self.Response(success=False, message='Error creating group %s' % name)
 
@@ -562,7 +570,7 @@ class UEM():
         for serial in serial_list:
             device_response = self.get_device(serial)
             if device_response is not False:
-                self.debug_print('Device %s is valid' % serial)
+                print('Device %s is valid' % serial)
             elif device_response is False:
                 print('Warning: Device %s doesn\'t exist' % serial)
                 continue
@@ -573,7 +581,7 @@ class UEM():
             payload['DeviceAdditions'].append(device)
 
         if payload['DeviceAdditions'] == []:
-            self.debug_print('No devices added to group %s' % group_name)
+            print('No devices added to group %s' % group_name)
 
         return payload
 
@@ -591,7 +599,7 @@ class UEM():
                 print('Warning: OG %s doesn\'t exist' % org_group)
                 continue
             else:
-                self.debug_print('OG %s is valid' % org_group)
+                print('OG %s is valid' % org_group)
 
             og_payload = {}
             og_payload['Id'] = og_response['OrganizationGroups'][0]['Id']
@@ -600,7 +608,7 @@ class UEM():
             payload['OrganizationGroups'].append(og_payload)
 
         if payload['OrganizationGroups'] == []:
-            self.debug_print('No OGs added to group %s' % group_name)
+            print('No OGs added to group %s' % group_name)
 
         return payload
 

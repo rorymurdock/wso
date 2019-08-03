@@ -5,7 +5,7 @@ import mock
 import base64
 import string
 import random
-from setup import ConfigSetup
+from WSO.configure import ConfigSetup
 #TODO: Setup main tests and stdin tests
 
 SETUP = ConfigSetup(overwrite=True)
@@ -112,7 +112,13 @@ def test_unwriteable_dir():
 def test_write_config_no_folder():
     assert ConfigSetup(overwrite=True, config_dir='/').write_config(None, 'CI Tests') is False
 
-#TODO create_config_directory()
+def test_create_config_directory():
+    test_config = ConfigSetup(overwrite=True, config_dir='config/test_config')
+    assert test_config.create_config_directory() is True
+    assert test_config.write_config(None, "test_config.json") is True
+
+
+
 #TODO write_config() 
 
 # def test_cleanup_tests():
