@@ -2,8 +2,10 @@
 omit =  WSO/configure_args.py
         WSO/uem_version.py
         setup.py
+        increment_version.py
 
 [report]
 omit =  WSO/configure_args.py
         WSO/uem_version.py
         setup.py
+        increment_version.py

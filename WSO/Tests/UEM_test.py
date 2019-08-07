@@ -22,6 +22,7 @@ TEST_ACTIVE_PRODUCT_ID = 888
 # Test group that already exists
 TEST_GROUP_NAME = "PyTest CI Smart group"
 TEST_GROUP_ID = 8686
+ASSIGNED_GROUP = 9048
 
 # Existing file ID
 PRODUCT_ACTION_ITEM_ID = 622
@@ -33,45 +34,54 @@ TEST_DEVICE_SERIAL = 17142522504057
 TEST_DEVICE_IP = '172.16.0.143'
 TEST_DEVICE_ID = 14229
 
-# Get AW version from API help page
-##
-with open('config/uem.json') as json_file:
-    url = json.load(json_file)['url']
-
-# Create REST instance
-rest = REST(url=url)
-
-# At some stage the version file changed, try both
-urls = ['/api/help/local.json', '/api/system/help/localjson']
-
-# Try the first URL
-response = rest.get(urls[0])
-
-# If that 404's try the second URL
-if response.status_code == 404:
-    response = rest.get(urls[1])
-
-# If this 200 OKs
-if response.status_code == 200:
-    # Get the text, parse is
-    versions = json.loads(response.text)
-    version = versions['apis'][0]['products'][0]
-
-    # Regex it to remove AirWatch and VMWare Workspace ONE UEM strings
-    # Leaving just the version number
-    AIRWATCH_VERSION = re.match(
-        r'(AirWatch|VMware Workspace ONE UEM);(.*)',
-        version,
-        re.M|re.I
-        ).group(2)
-
-AW = UEM(debug=True)
-
+# Random ID for the session
 def random_chars(string_length=8):
     """Generate a random string of letters and digits """
     return ''.join(random.choice(
         string.ascii_uppercase + string.digits
         ) for i in range(string_length))
+
+SESSION_ID = random_chars()
+
+# Get AW version from API help page
+##
+with open('config/uem.json') as json_file:
+    URL = json.load(json_file)['url']
+
+# Create REST instance
+vREST = REST(url=URL)
+
+# At some stage the version file changed, try both
+URLS = ['/api/help/local.json', '/api/system/help/localjson']
+
+# Try the first URL
+VERSION = vREST.get(URLS[0])
+
+# If that 404's try the second URL
+if VERSION.status_code == 404:
+    VERSION = vREST.get(URLS[1])
+
+# Delete the REST var for later use
+del vREST
+
+# If this 200 OKs
+if VERSION.status_code == 200:
+    # Get the text, parse is
+    VERSIONS = json.loads(VERSION.text)
+    VERSION = VERSIONS['apis'][0]['products'][0]
+
+    # Regex it to remove AirWatch and VMWare Workspace ONE UEM strings
+    # Leaving just the version number
+    AIRWATCH_VERSION = re.match(
+        r'(AirWatch|VMware Workspace ONE UEM);(.*)',
+        VERSION,
+        re.M|re.I
+        ).group(2)
+
+print('Test session ID: %s' % SESSION_ID)
+print('Testing WSO UEM Version: %s' % VERSION)
+
+AW = UEM(debug=True)
 
 # Setup configs
 def test_proxy_auth():
@@ -133,11 +143,11 @@ def test_basic_url():
     response = AW.basic_url('/api/404')
     assert response[0] is False
     assert response[1] == 404
-    
+
     response = AW.basic_url('/api/help', 406)
     assert response[0] is None
     assert response[1] == 406
-    
+
 
 def test_bad_config_folder():
     """Tests bad config"""
@@ -191,29 +201,32 @@ def test_get_group_name():
 def test_get_group():
     """Tests getting group info"""
     assert isinstance(AW.get_group(TEST_GROUP_NAME), dict) is True
+    assert isinstance(AW.get_group(groupid=TEST_GROUP_ID), dict) is True
 
+# TODO
 # def test_assign_products():
 
 def test_product_is_active():
+    """Test product activation state"""
     assert AW.product_is_active(TEST_ACTIVE_PRODUCT_ID) is True
     assert AW.product_is_active(TEST_PRODUCT_ID) is False
 
 def test_activate_no_group_product():
+    """Test activating a product with no assigned groups"""
     assert AW.activate_product(TEST_PRODUCT_ID) is False
 
 def test_product():
     """Creates product, checks assignments, and then deactivates it"""
     # Create test product
-    product_random = random_chars()
     created_product_id = AW.create_product(
-        'CI Test - %s' % product_random,
+        'CI Test - %s' % SESSION_ID,
         'API CI Testing product, can be safely deleted', 5, 622, 5)
 
     assert isinstance(created_product_id, int) is True
 
     # Try to create product with name conflict
     assert AW.create_product(
-        'CI Test - %s' % product_random,
+        'CI Test - %s' % SESSION_ID,
         'API CI Testing product, can be deleted', 5, 622, 5) is False
 
     # Check product group assignements
@@ -223,7 +236,7 @@ def test_product():
 
     # Check product name
     response = AW.get_product_by_id(created_product_id)[0]
-    assert response['Name'] == ('CI Test - %s' % product_random)
+    assert response['Name'] == ('CI Test - %s' % SESSION_ID)
     assert response['Active'] is False
 
     # Assign group
@@ -256,33 +269,35 @@ def test_get_device_ip():
     assert AW.get_device_ip('11111') is False
 
 def test_get_device():
-        device = AW.get_device(TEST_DEVICE_SERIAL)
-        assert device['Id']['Value'] == TEST_DEVICE_ID
+    """Test getting device info"""
+    device = AW.get_device(TEST_DEVICE_SERIAL)
+    assert device['Id']['Value'] == TEST_DEVICE_ID
 
 def test_get_device_extensive():
-        device_id = AW.get_device(TEST_DEVICE_SERIAL)['Id']['Value']
-        response = AW.get_device_extensive(device_id)['Devices'][0]
+    """Test getting extensive device info"""
+    device_id = AW.get_device(TEST_DEVICE_SERIAL)['Id']['Value']
+    response = AW.get_device_extensive(device_id)['Devices'][0]
 
-        assert response['DeviceId'] == TEST_DEVICE_ID
-        assert response['DeviceUuid'] == 'a9f524fc-f9c8-4f64-9992-140944b16abe'
-        assert response['Udid'] == '433f4189881517307f0431ac622558be'
-        assert response['SerialNumber'] == str(TEST_DEVICE_SERIAL)
-        assert response['DeviceFriendlyName'] == 'pytest Android_TC51_null 4057'
-        assert response['UserName'] == 'pytest_enrol'
-        assert response['LastSeen'] == '2019-07-03T22:14:26.290'
-        assert response['EnrollmentDate'] == '2019-06-19T11:42:11.580'
-        assert response['Compliant'] is True
-        assert response['AssetNumber'] == '433f4189881517307f0431ac622558be'
-        assert response['EnrollmentStatus'] == 'Enrolled'
-        assert response['Products'][0]['ProductId'] ==  846
-        assert response['Products'][0]['Name'] ==  'Product Set 1'
-        assert response['Products'][0]['Status'] ==  'Compliant'
-        assert response['SmartGroups'][0]['SmartGroupId'] == 1155
-        assert response['SmartGroups'][0]['SmartGroupUuid'] == '14a44cb1-5b15-e711-80c4-0025b5010089'
-        assert response['SmartGroups'][0]['Name'] == 'All Devices'
-        assert response['CustomAttributes'][0]['Name'] == 'identity.deviceModel'
-        assert response['CustomAttributes'][0]['Value'] == 'TC51'
-        assert response['CustomAttributes'][0]['ApplicationGroup'] == 'com.airwatch.androidagent.identity.xml'
+    assert response['DeviceId'] == TEST_DEVICE_ID
+    assert response['DeviceUuid'] == 'a9f524fc-f9c8-4f64-9992-140944b16abe'
+    assert response['Udid'] == '433f4189881517307f0431ac622558be'
+    assert response['SerialNumber'] == str(TEST_DEVICE_SERIAL)
+    assert response['DeviceFriendlyName'] == 'pytest Android_TC51_null 4057'
+    assert response['UserName'] == 'pytest_enrol'
+    assert response['LastSeen'] == '2019-07-03T22:14:26.290'
+    assert response['EnrollmentDate'] == '2019-06-19T11:42:11.580'
+    assert response['Compliant'] is True
+    assert response['AssetNumber'] == '433f4189881517307f0431ac622558be'
+    assert response['EnrollmentStatus'] == 'Enrolled'
+    assert response['Products'][0]['ProductId'] == 846
+    assert response['Products'][0]['Name'] == 'Product Set 1'
+    assert response['Products'][0]['Status'] == 'Compliant'
+    assert response['SmartGroups'][0]['SmartGroupId'] == 1155
+    assert response['SmartGroups'][0]['SmartGroupUuid'] == '14a44cb1-5b15-e711-80c4-0025b5010089'
+    assert response['SmartGroups'][0]['Name'] == 'All Devices'
+    assert response['CustomAttributes'][0]['Name'] == 'identity.deviceModel'
+    assert response['CustomAttributes'][0]['Value'] == 'TC51'
+    assert response['CustomAttributes'][0]['ApplicationGroup'] == 'com.airwatch.androidagent.identity.xml'
 
 
 
@@ -324,21 +339,22 @@ def test_format_group_payload_ogs():
 
 def test_create_delete_group_from_og():
     """Creates a group based on a list of OGs, deletes it"""
-    group_random = random_chars()
 
-    group = AW.create_group_from_ogs('CI Test - %s' % group_random, [ROOT_OG])
-    response = AW.create_group_from_ogs('CI Test - %s' % group_random, [ROOT_OG]) is False
+    group = AW.create_group_from_ogs('CI Test - %s' % SESSION_ID, [ROOT_OG])
+    response = AW.create_group_from_ogs('CI Test - %s' % SESSION_ID, [ROOT_OG]) is False
     assert response is False
     assert group.success is True
 
     assert AW.delete_group(group.id) is True
     assert AW.delete_group(0) is False
 
+    # Try to delete a group that is assigned
+    assert AW.delete_group(ASSIGNED_GROUP) is False
+
 def test_create_group_from_devices():
     """Creates a group based on a list of devices, deletes it"""
-    group_random = random_chars()
 
-    group = AW.create_group_from_devices('CI Test - %s' % group_random, [TEST_DEVICE_SERIAL])
+    group = AW.create_group_from_devices('CI Test - %s' % SESSION_ID, [TEST_DEVICE_SERIAL])
     assert group.success is True
 
     assert AW.delete_group(group.id) is True
@@ -393,3 +409,20 @@ def test_remove_groups_from_products():
 
     # Test bad product ID
     assert AW.remove_all_groups_from_product(0) is False
+
+def test_tag_full():
+    """Test creating a tag, assign, unassign, and delete"""
+    new_tag = AW.create_tag('CI Test - %s' % SESSION_ID)
+    assert isinstance(new_tag, int)
+    # Create tag again to get the same int
+    duplicate_tag = AW.create_tag('CI Test - %s' % SESSION_ID)
+    assert isinstance(duplicate_tag, int)
+    assert duplicate_tag == new_tag
+    tag_id = AW.get_tag('CI Test - %s' % SESSION_ID)[0]['Id']['Value']
+    assert AW.add_tag(tag_id, [TEST_DEVICE_ID])
+    assert AW.get_tagged_devices(tag_id)[0]['DeviceId'] == TEST_DEVICE_ID
+    assert AW.remove_tag(tag_id, [TEST_DEVICE_ID]) is True
+    assert AW.delete_tag(tag_id) is True
+
+def test_tag_errors():
+    assert AW.x_tag('badaction', 999, [0, 0]) is False

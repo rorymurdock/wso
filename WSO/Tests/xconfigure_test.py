@@ -1,10 +1,10 @@
 """Built tests"""
 import os
 import stat
-import mock
 import base64
 import string
 import random
+# import mock
 from WSO.configure import ConfigSetup
 #TODO: Setup main tests and stdin tests
 
@@ -66,7 +66,7 @@ def test_get_config_setting():
     """Tests verifying config"""
     assert SETUP.verify_config("testing", KEY, VALUE) is True
     assert SETUP.get_config_setting("testing") == {KEY: VALUE}
-    assert SETUP.get_config_setting("filedoesntexist", key="wrongkey") == None
+    assert SETUP.get_config_setting("filedoesntexist", key="wrongkey") is None
 
 def test_get_config_setting_mismatch():
     """Tests handling non existant config"""
@@ -76,7 +76,7 @@ def test_get_config_setting_mismatch():
 def test_set_proxy_config():
     """Tests writing proxy config"""
     proxy_server = random_string()
-    proxy_port = random.randint(0,65535)
+    proxy_port = random.randint(0, 65535)
     assert SETUP.write_proxy_config(proxy_server, proxy_port) is True
     assert SETUP.verify_config("proxy.json", "proxy", True) is True
     assert SETUP.verify_config("proxy.json", "proxy_server", proxy_server) is True
@@ -107,25 +107,28 @@ def test_set_all_config_existing():
     assert SETUP.set_config() is True
 
 def test_unwriteable_dir():
+    """Test writing to a dir that has no write permissions"""
     assert ConfigSetup(overwrite=True, config_dir='/').create_config_directory() is False
 
 def test_write_config_no_folder():
+    """Test writing without a folder"""
     assert ConfigSetup(overwrite=True, config_dir='/').write_config(None, 'CI Tests') is False
 
 def test_create_config_directory():
+    """Test creating the config directory"""
     test_config = ConfigSetup(overwrite=True, config_dir='config/test_config')
     assert test_config.create_config_directory() is True
     assert test_config.write_config(None, "test_config.json") is True
 
 
 
-#TODO write_config() 
+#TODO write_config()
 
 # def test_cleanup_tests():
 #     """Deletes all files created during testing"""
 #     files = ("testing", "readonly", "proxy.json", "uem.json")
 #     directories = ("config", "config/bad_config", "config/proxy_config")
-    
+
 #     for directory in directories:
 #         temp_setup = ConfigSetup(config_dir=directory)
 #         for file in files:
@@ -135,7 +138,7 @@ def test_create_config_directory():
 #         if temp_setup.check_config_dir_exists():
 #             os.rmdir(directory)
 #         assert SETUP.check_config_dir_exists(directory) is False
-    
+
 
 
 # TODO: Try mock to do user input

@@ -97,6 +97,8 @@ class UEM():
         status_codes[404] = False, 'HTTP 404: Not found'
         status_codes[406] = True, 'HTTP 406: Not Acceptable'
         status_codes[422] = False, 'HTTP 422: Invalid searchby Parameter'
+        status_codes[500] = False, 'HTTP 500: Internal server error'
+
 
         if status_code == expected_code:
             return True
@@ -250,10 +252,15 @@ class UEM():
             print('Error gettting OG info %s' % name)
             return False
 
-    def get_group(self, name=None, pagesize=500, page=0):
+    def get_group(self, name=None, groupid=None, pagesize=500, page=0):
         """Gets smartgroups, supports all or searching, returns json"""
         # Set base URL
-        url = '/api/mdm/smartgroups/search'
+        url = '/api/mdm/smartgroups/'
+        
+        if groupid is not None and isinstance(groupid, int):
+            url = url + str(groupid)
+        else:
+            url = url + "search"
 
         # Add arguments
         url = self.append_url(url, vars())
@@ -629,3 +636,82 @@ class UEM():
                 print("Unable to delete %s" % group_name)
                 self.debug_print(response.text)
         return False
+    
+    def get_tag(self, name=None, og=None):
+        """Gets tags, supports all or searching, returns json"""
+
+        arguments = {}
+
+        if og is None:
+            # Set the product to be at the highest OG
+            arguments['OrganizationGroupId'] = self.get_og(pagesize=1)['OrganizationGroups'][0]['Id']
+        if name is not None:
+            arguments['name'] = name
+        
+        response = self.rest_v1.get("/api/mdm/tags/search", arguments)
+
+        if self.check_http_response(response.status_code):
+            response = json.loads(response.text)['Tags']
+
+            return response
+
+        return False # pragma: no cover
+    
+    def add_tag(self, tagid: int, devices: list):
+        """Adds tags to device list, returns bool"""
+        return self.x_tag('add', tagid, devices)
+    
+    def remove_tag(self, tagid: int, devices: list):
+        """Removes tags from device list, returns bool"""
+        return self.x_tag('remove', tagid, devices)
+    
+    def x_tag(self, action, tagid: int, devices: list):
+        """Performs an action on device tags"""
+        if action not in ['add', 'remove']:
+            print('%s invalid action')
+            return False
+
+        payload = {}
+        payload['BulkValues'] = {}
+        payload['BulkValues']['Value'] = devices
+
+        response = self.rest_v1.post('/api/mdm/tags/%i/%sdevices' % (tagid, action), payload=payload)
+        
+        return self.check_http_response(response.status_code)
+    
+    def get_tagged_devices(self, tagid: int):
+
+        response = self.basic_url('/api/mdm/tags/%i/devices' % tagid)
+
+        if response[1] == 200:
+            return response[0]['Device']
+        else:
+            return False # pragma: no cover
+
+    def create_tag(self, tagname: str, og=None, tagtype=1):
+        
+        existing_tag = self.get_tag(tagname)
+        if existing_tag:
+            print('Tag already exists: %s' % existing_tag[0]['Id']['Value'])
+            return existing_tag[0]['Id']['Value']
+
+        payload = {}
+
+        if og is None:
+            # Set the product to be at the highest OG
+            payload['LocationGroupId'] = self.get_og(pagesize=1)['OrganizationGroups'][0]['Id']
+
+        payload['TagName'] = tagname
+        payload['TagType'] = tagtype
+        
+        response = self.rest_v1.post("/api/mdm/tags/addtag", payload)
+
+        if self.check_http_response(response.status_code):
+            return json.loads(response.text)['Value']
+
+        return False # pragma: no cover
+    
+    def delete_tag(self, tagid: int):
+        response = self.rest_v1.delete('/api/mdm/tags/%i' % tagid)
+
+        return self.check_http_response(response.status_code)
