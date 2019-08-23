@@ -12,6 +12,7 @@ from WSO.configure import ConfigSetup
 
 # Root OG
 ROOT_OG = "pytest"
+ROOT_OG_ID = 4800
 
 # NO_GROUP = 14
 # Test product that already exists
@@ -33,6 +34,8 @@ PRODUCT_PLATFORM_ID = 5
 TEST_DEVICE_SERIAL = 17142522504057
 TEST_DEVICE_IP = '172.16.0.143'
 TEST_DEVICE_ID = 14229
+
+OG_TO_MOVE_TO = 'Staged'
 
 # Random ID for the session
 def random_chars(string_length=8):
@@ -144,7 +147,8 @@ def test_basic_url():
     assert response[0] is False
     assert response[1] == 404
 
-    response = AW.basic_url('/api/help', 406)
+    response = AW.basic_url('/api/help', expected_code=406)
+
     assert response[0] is None
     assert response[1] == 406
 
@@ -426,3 +430,18 @@ def test_tag_full():
 
 def test_tag_errors():
     assert AW.x_tag('badaction', 999, [0, 0]) is False
+
+def test_change_og():
+    change_og_id = AW.get_og(name=OG_TO_MOVE_TO)['OrganizationGroups'][0]['Id']
+
+    # Move device to the root OG to start with
+    AW.change_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
+    assert AW.get_device(TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
+
+    # Move device to the Staging OG
+    AW.change_og(TEST_DEVICE_SERIAL, change_og_id)
+    assert AW.get_device(TEST_DEVICE_SERIAL)['LocationGroupName'] == OG_TO_MOVE_TO
+
+    # Move device back to the root OG to finish up
+    AW.change_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
+    assert AW.get_device(TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG

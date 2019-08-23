@@ -167,10 +167,10 @@ class UEM():
         self.debug_print("URL: %s" % url)
         return url
 
-    def basic_url(self, url, expected_code=None):
+    def basic_url(self, url, querystring="", expected_code=None):
         """Basic REST GET returns [json response, status code]"""
         # Query API
-        response = self.rest_v2.get(url)
+        response = self.rest_v2.get(url, queries=querystring)
 
         # Check response and return validated data
         check = self.check_http_response(response.status_code, expected_code=expected_code)
@@ -429,10 +429,16 @@ class UEM():
                 self.debug_print(response.text)
         return False
 
-    def get_all_devices(self):
-        #TODO Add pagesize
+    def get_all_devices(self, platform=None, pagesize=None):
         """Get all devices from AirWatch"""
-        return self.basic_url('/api/mdm/devices/search')[0]
+        #TODO: Optimise
+        querystring = {}
+        if platform is not None:
+            querystring['platform'] = platform
+        if pagesize is not None:
+            querystring['pagesize'] = pagesize
+
+        return self.basic_url('/api/mdm/devices/search', querystring=querystring)[0]
 
     def get_product_by_id(self, product_id):
         """Return product details from ID"""
@@ -713,5 +719,18 @@ class UEM():
     
     def delete_tag(self, tagid: int):
         response = self.rest_v1.delete('/api/mdm/tags/%i' % tagid)
+        return self.check_http_response(response.status_code)
+    
+    def get_printer(self, printerid: int):
+        return self.basic_url('/api/mdm/peripherals/printer/%i' % printerid)[0]
+    
+    def change_og(self, deviceid, organizationGroupId: int, searchby='Serialnumber'):
+
+        querystring = {}
+        querystring['searchby'] = searchby
+        querystring['id'] = deviceid
+        querystring['ogid'] = organizationGroupId
+
+        response = self.rest_v1.post('/api/mdm/devices/commands/changeorganizationgroup', queries=querystring)
 
         return self.check_http_response(response.status_code)
