@@ -607,7 +607,9 @@ class UEM():
 
         for org_group in og_list:
             og_response = self.get_og(org_group)
-            # if og_response is not False:
+            if og_response is False:
+                return False
+
             if og_response['OrganizationGroups'] == []:
                 print('Warning: OG %s doesn\'t exist' % org_group)
                 continue
