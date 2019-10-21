@@ -4,6 +4,7 @@ import json
 import string
 import random
 import pytest
+import requests
 from reqREST import REST
 from WSO.UEM import UEM
 from WSO.configure import ConfigSetup
@@ -19,6 +20,7 @@ ROOT_OG_ID = 4800
 TEST_PRODUCT_NAME = "CI Test Product"
 TEST_PRODUCT_ID = 792
 TEST_ACTIVE_PRODUCT_ID = 888
+TEST_ASSIGNED_PRODUCT = 930
 
 # Test group that already exists
 TEST_GROUP_NAME = "PyTest CI Smart group"
@@ -34,6 +36,8 @@ PRODUCT_PLATFORM_ID = 5
 TEST_DEVICE_SERIAL = 17142522504057
 TEST_DEVICE_IP = '172.16.0.143'
 TEST_DEVICE_ID = 14229
+TEST_DEVICE_FRIENDLY_NAME = 'pytest Android_TC51_null 4057'
+TEST_DEVICE_LAST_SEEN = '07-03-2019 22:14:26.290'
 
 OG_TO_MOVE_TO = 'Staged'
 
@@ -51,8 +55,19 @@ SESSION_ID = random_chars()
 with open('config/uem.json') as json_file:
     URL = json.load(json_file)['url']
 
+with open('config/proxy.json') as json_file:
+    settings = json.load(json_file)
+    proxy = settings['proxy']
+    if proxy:
+        proxies = {
+            'http': '%s:%s' % (settings['proxy_server'], settings['proxy_port']),
+            'https': '%s:%s' % (settings['proxy_server'], settings['proxy_port'])
+        }
+    else:
+        proxies = None
+
 # Create REST instance
-vREST = REST(url=URL)
+vREST = REST(url=URL, proxy=proxies)
 
 # At some stage the version file changed, try both
 URLS = ['/api/help/local.json', '/api/system/help/localjson']
@@ -106,23 +121,29 @@ def test_bad_auth():
 # HTTP Code tests
 def test_expected():
     """Test HTTP expected response"""
-    assert AW.check_http_response(200, 200) is True
+    response = requests.models.Response()
+    response.status_code = 200
+
+    assert AW.check_http_response(response, 200) is True
 
 def test_unexpected():
     """Tests unexpected response is returns as False"""
-    assert AW.check_http_response('unexpected') is False
+    response = requests.models.Response()
+    response.status_code = 'unexpected'
+
+    assert AW.check_http_response(response) is False
 
 def test_true_http():
     """Checks good responses are True"""
-    demo_api = REST(url='postman-echo.com')
+    demo_api = REST(url='postman-echo.com', proxy=proxies)
     for code in (200, 201, 204):
-        assert AW.check_http_response(demo_api.get("/status/%i" % code).status_code) is True
+        assert AW.check_http_response(demo_api.get("/status/%i" % code)) is True
 
 def test_false_http():
     """Checks good responses are False"""
-    demo_api = REST(url='postman-echo.com')
+    demo_api = REST(url='postman-echo.com', proxy=proxies)
     for code in (400, 401, 403, 404, 422):
-        assert AW.check_http_response(demo_api.get("/status/%i" % code).status_code) is False
+        assert AW.check_http_response(demo_api.get("/status/%i" % code)) is False
 
 # Test sub-functions
 def test_json():
@@ -215,10 +236,12 @@ def test_product_is_active():
     assert AW.product_is_active(TEST_ACTIVE_PRODUCT_ID) is True
     assert AW.product_is_active(TEST_PRODUCT_ID) is False
 
+#TODO Re-enable once #19070881010 is resolved
 def test_activate_no_group_product():
     """Test activating a product with no assigned groups"""
     assert AW.activate_product(TEST_PRODUCT_ID) is False
 
+#TODO Re-enable once #19070881010 is resolved
 def test_product():
     """Creates product, checks assignments, and then deactivates it"""
     # Create test product
@@ -263,7 +286,7 @@ def test_product():
 def test_get_all_devices():
     """Tests getting a list of all devices"""
     # Possible improvement: Check for device details, serials etc
-    response = AW.get_all_devices()
+    response = AW.get_all_devices(platform='Android', pagesize=10)
     assert isinstance(response, dict) is True
     assert response['Devices'] != []
 
@@ -286,7 +309,7 @@ def test_get_device_extensive():
     assert response['DeviceUuid'] == 'a9f524fc-f9c8-4f64-9992-140944b16abe'
     assert response['Udid'] == '433f4189881517307f0431ac622558be'
     assert response['SerialNumber'] == str(TEST_DEVICE_SERIAL)
-    assert response['DeviceFriendlyName'] == 'pytest Android_TC51_null 4057'
+    assert response['DeviceFriendlyName'] == TEST_DEVICE_FRIENDLY_NAME
     assert response['UserName'] == 'pytest_enrol'
     assert response['LastSeen'] == '2019-07-03T22:14:26.290'
     assert response['EnrollmentDate'] == '2019-06-19T11:42:11.580'
@@ -319,7 +342,7 @@ def test_format_group_payload_devices():
     assert isinstance(AW.format_group_payload_devices(group_name, [devices[0], devices[1]]), dict) is True
 
     # Test 1 device payload
-    payload['DeviceAdditions'].append({'Id': 14229, 'Name': 'pytest Android_TC51_null 4057'})
+    payload['DeviceAdditions'].append({'Id': 14229, 'Name': TEST_DEVICE_FRIENDLY_NAME})
     assert AW.format_group_payload_devices(group_name, devices) == payload
 
 def test_format_group_payload_ogs():
@@ -363,6 +386,7 @@ def test_create_group_from_devices():
 
     assert AW.delete_group(group.id) is True
 
+#TODO Re-enable once #19070881010 is resolved
 def test_remove_group_from_product():
     """Test removing group from a product"""
     # Remove all assigned groups
@@ -370,7 +394,7 @@ def test_remove_group_from_product():
     assert AW.check_no_group_assignments(TEST_PRODUCT_ID) is True
 
     # Assign 1 group to product
-    assert AW.assign_group_to_product(TEST_PRODUCT_ID, 8686) is True
+    assert AW.assign_group_to_product(TEST_PRODUCT_ID, TEST_GROUP_ID) is True
     assert AW.check_no_group_assignments(TEST_PRODUCT_ID) is False
 
     # Remove the 1 assigned group and make sure it's not longer assigned
@@ -381,13 +405,18 @@ def test_remove_group_from_product():
     assert AW.remove_group_from_product(TEST_PRODUCT_ID, 0) is False
     assert AW.remove_group_from_product(0, TEST_GROUP_ID) is False
 
-
+#TODO Re-enable once #19070881010 is resolved
 def test_assign_group_to_product():
     """Tests assigning groups to a product"""
     # Remove all groups from the product first
     AW.remove_all_groups_from_product(TEST_PRODUCT_ID)
 
     assert AW.assign_group_to_product(TEST_PRODUCT_ID, TEST_GROUP_ID) is True
+
+    # Test reprocessing
+    AW.remove_group_from_product(TEST_ACTIVE_PRODUCT_ID, TEST_GROUP_ID)
+    assert AW.assign_group_to_product(TEST_ACTIVE_PRODUCT_ID, TEST_GROUP_ID) is True
+
     # Should still return True if already assigned
     assert AW.assign_group_to_product(TEST_PRODUCT_ID, TEST_GROUP_ID) is True
 
@@ -445,3 +474,38 @@ def test_change_og():
     # Move device back to the root OG to finish up
     AW.change_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
     assert AW.get_device(TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
+
+def test_get_printer():
+    # No printers in environment no chance of getting one
+    # Test only that printer doesn't exist
+    assert AW.get_printer(0) is False
+
+def test_get_product_device_state():
+    # Test bad ID
+    assert AW.get_product_device_state(0, 'assigned') == (False, 404)
+
+    # Test bad state
+    assert AW.get_product_device_state(TEST_PRODUCT_ID, 'badassigned') == None
+
+    # Test bad everything
+    assert AW.get_product_device_state(0, 'badassigned') == None
+
+    # Test inactive product
+    assert AW.get_product_device_state(TEST_PRODUCT_ID, 'assigned', pagesize=10) == (None, 204)
+
+    # Test active product
+    devices = {}
+    devices['Devices'] = []
+
+    device = {}
+    device['DeviceId'] = TEST_DEVICE_ID
+    device['Name'] = TEST_DEVICE_FRIENDLY_NAME
+    device['LastJobStatus'] = 'NoJobs'
+    device['LastSeen'] = TEST_DEVICE_LAST_SEEN
+
+    devices['Devices'].append(device)
+    devices['Page'] = 0
+    devices['PageSize'] = 10
+    devices['Total'] = 1
+
+    assert AW.get_product_device_state(TEST_ASSIGNED_PRODUCT, 'assigned', pagesize=10) == (devices, 200)

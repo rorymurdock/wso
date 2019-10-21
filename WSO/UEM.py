@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import time
+import requests
 from .configure import ConfigSetup
 from reqREST import REST
 
@@ -85,7 +86,7 @@ class UEM():
 
     # Check HTTP codes for common errors
     # Allow specifying an expected code for custom use
-    def check_http_response(self, status_code, expected_code=None):
+    def check_http_response(self, response, expected_code=None):
         """Checks if response is a expected or a known good response"""
         status_codes = {}
         status_codes[200] = True, 'HTTP 200: OK'
@@ -99,14 +100,15 @@ class UEM():
         status_codes[422] = False, 'HTTP 422: Invalid searchby Parameter'
         status_codes[500] = False, 'HTTP 500: Internal server error'
 
-
-        if status_code == expected_code:
+        if response.status_code == expected_code:
             return True
-        elif status_code in status_codes:
-            self.debug_print(status_codes[status_code][1])
-            return status_codes[status_code][0]
+        elif response.status_code in status_codes:
+            self.debug_print(status_codes[response.status_code][1])
+            if response.status_code == 400 and self.debug:
+                print(response.text)
+            return status_codes[response.status_code][0]
         else:
-            print('Unknown code %s' % status_code)
+            print('Unknown code %s' % response.status_code)
             return False
 
     # Import credentials config file
@@ -167,18 +169,23 @@ class UEM():
         self.debug_print("URL: %s" % url)
         return url
 
-    def basic_url(self, url, querystring="", expected_code=None):
+    def basic_url(self, url, querystring="", expected_code=None, version=2):
         """Basic REST GET returns [json response, status code]"""
         # Query API
-        response = self.rest_v2.get(url, queries=querystring)
+        if version == 1:
+            response = self.rest_v1.get(url, queries=querystring)
+        else:
+            response = self.rest_v2.get(url, queries=querystring)
 
         # Check response and return validated data
-        check = self.check_http_response(response.status_code, expected_code=expected_code)
+        check = self.check_http_response(response, expected_code=expected_code)
 
         if check:
             if not isinstance(response.text, dict):
                 return self.str_to_json(response.text), response.status_code
             else:
+                # This shouldn't happen but sometimes UEM returns text instead of json
+                # pragma: no cover
                 return response.text, response.status_code
         else:
             return False, response.status_code
@@ -191,7 +198,7 @@ class UEM():
         print(response)
         print(response.status_code)
 
-        check = self.check_http_response(response.status_code)
+        check = self.check_http_response(response)
         if check:
             # Examples of what you can do
             if self.debug:
@@ -227,7 +234,7 @@ class UEM():
         response = self.rest_v2.get(
             '/api/system/info')
 
-        if self.check_http_response(response.status_code):
+        if self.check_http_response(response):
             return json.loads(response.text)
         else:
             print('Error gettting System version')
@@ -245,11 +252,10 @@ class UEM():
         response = self.rest_v2.get(url)
 
         # Check response and return validated data
-        check = self.check_http_response(response.status_code)
+        check = self.check_http_response(response)
         if check and response.status_code != 204:
             return self.str_to_json(response.text)
         else:
-            print('Error gettting OG info %s' % name)
             return False
 
     def get_group(self, name=None, groupid=None, pagesize=500, page=0):
@@ -269,7 +275,7 @@ class UEM():
         response = self.rest_v1.get(url)
 
         # Check response and return validated data
-        check = self.check_http_response(response.status_code)
+        check = self.check_http_response(response)
         if check and response.status_code != 204:
             return self.str_to_json(response.text)
         else:
@@ -281,7 +287,7 @@ class UEM():
         response = self.rest_v1.get(
             '/api/mdm/%s/%s' % (item_type, item_id))
 
-        if self.check_http_response(response.status_code):
+        if self.check_http_response(response):
             return self.str_to_json(response.text)['Name']
         else:
             print('Error gettting %s %s name' % (item_type, item_id))
@@ -300,6 +306,19 @@ class UEM():
         url = '/api/mdm/products/search?name=%s' % name
 
         return self.basic_url(url)
+    
+    def get_product_device_state(self, product_id: int, state: str, pagesize=None):
+        if state not in ['compliant', 'inprogress', 'failed', 'assigned']:
+            print('Invalid state %s' % state)
+            return None
+        
+        querystring = {}
+        if pagesize is not None:
+            querystring['pagesize'] = pagesize
+        
+        response = self.basic_url('/api/mdm/products/%i/%s' % (product_id, state), querystring=querystring)
+
+        return response
 
     def get_product_assigned_groups(self, product_id):
         """Gets all assigned groups for a productId"""
@@ -343,7 +362,7 @@ class UEM():
 
         # Query API
         response = self.rest_v1.post(url)
-        if self.check_http_response(response.status_code) is not False:
+        if self.check_http_response(response) is not False:
             print(response)
             return True
         else: # pragma: no cover
@@ -419,9 +438,7 @@ class UEM():
         else:
             print("Deleting product %s" % product_name)
             response = self.rest_v1.delete('/api/mdm/products/%i' % product_id)
-            if self.check_http_response(
-                    response.status_code
-                ):
+            if self.check_http_response(response):
                 print("Product %s deleted" % product_name)
                 return True
             else:
@@ -438,7 +455,7 @@ class UEM():
         if pagesize is not None:
             querystring['pagesize'] = pagesize
 
-        return self.basic_url('/api/mdm/devices/search', querystring=querystring)[0]
+        return self.basic_url('/api/mdm/devices/search', querystring=querystring, version=1)[0]
 
     def get_product_by_id(self, product_id):
         """Return product details from ID"""
@@ -455,7 +472,12 @@ class UEM():
 
     def get_device(self, serial_number):
         """Get device details from serial"""
-        response = self.basic_url('/api/mdm/devices/serialnumber/%s' % serial_number)
+
+        querystring = {}
+        querystring['searchby'] = 'Serialnumber'
+        querystring['id'] = serial_number
+
+        response = self.basic_url('/api/mdm/devices/', querystring=querystring)
 
         return response[0]
 
@@ -466,7 +488,11 @@ class UEM():
     
     # TODO Build out
     def get_device_extensive(self, device_id):
-        response = self.basic_url('/api/mdm/devices/extensivesearch?deviceid=%s' % device_id)
+
+        querystring = {}
+        querystring['deviceid'] = device_id
+
+        response = self.basic_url('/api/mdm/devices/extensivesearch', querystring=querystring)
 
         return response[0]
 
@@ -499,8 +525,18 @@ class UEM():
 
         self.debug_print('Assigning %s to %s' % (group_name, product_name))
         response = self.rest_v1.post('/api/mdm/products/%s/addsmartgroup/%s' % (product_id, group_id))
+        
+        if self.check_http_response(response) and self.product_is_active(product_id):
+            return self.reprocess_product(product_id=product_id, device_list=None, force=False)
 
-        return self.check_http_response(response.status_code)
+        # Encountered issue where groups would be assigned but the product not assigned
+        # VMWare TDOC-6776
+        # If we edit an existing Product created via API and add a component like F/A or Application to it
+        # using API, the product is not pushed to Policy Engine. Similarly when there is a smart group addition
+        # to an existing Product via API we do not queue jobs to the newly added devices until we do a subsequent
+        # call to the /reprocess/ API. This behavior is expected and as per the design.
+
+        return self.check_http_response(response)
 
     def check_no_group_assignments(self, product_id):
         """Checks if product has no assignemnts"""
@@ -514,7 +550,7 @@ class UEM():
         response = self.rest_v1.post('/api/mdm/products/%s/removesmartgroup/%s' % (product_id, group_id))
 
         # Check response
-        if self.check_http_response(response.status_code):
+        if self.check_http_response(response):
             return True
         else:
             return False
@@ -552,7 +588,7 @@ class UEM():
 
         response = self.rest_v1.post('/api/mdm/smartgroups/', payload=payload)
 
-        if self.check_http_response(response.status_code):
+        if self.check_http_response(response):
             print('Group %s created successfully, id: %s' % (name, self.str_to_json(response.text)['Value']))
             return self.Response(success=True, id=self.str_to_json(response.text)['Value'])
         else: # pragma: no cover
@@ -635,9 +671,7 @@ class UEM():
         else:
             print("Deleting group %s" % group_name)
             response = self.rest_v1.delete('/api/mdm/smartgroups/%i' % group_id)
-            if self.check_http_response(
-                    response.status_code
-                ):
+            if self.check_http_response(response):
                 print("Group %s deleted" % group_name)
                 return True
             else:
@@ -658,7 +692,7 @@ class UEM():
         
         response = self.rest_v1.get("/api/mdm/tags/search", arguments)
 
-        if self.check_http_response(response.status_code):
+        if self.check_http_response(response):
             response = json.loads(response.text)['Tags']
 
             return response
@@ -685,7 +719,7 @@ class UEM():
 
         response = self.rest_v1.post('/api/mdm/tags/%i/%sdevices' % (tagid, action), payload=payload)
         
-        return self.check_http_response(response.status_code)
+        return self.check_http_response(response)
     
     def get_tagged_devices(self, tagid: int):
 
@@ -714,14 +748,14 @@ class UEM():
         
         response = self.rest_v1.post("/api/mdm/tags/addtag", payload)
 
-        if self.check_http_response(response.status_code):
+        if self.check_http_response(response):
             return json.loads(response.text)['Value']
 
         return False # pragma: no cover
     
     def delete_tag(self, tagid: int):
         response = self.rest_v1.delete('/api/mdm/tags/%i' % tagid)
-        return self.check_http_response(response.status_code)
+        return self.check_http_response(response)
     
     def get_printer(self, printerid: int):
         return self.basic_url('/api/mdm/peripherals/printer/%i' % printerid)[0]
@@ -735,4 +769,23 @@ class UEM():
 
         response = self.rest_v1.post('/api/mdm/devices/commands/changeorganizationgroup', queries=querystring)
 
-        return self.check_http_response(response.status_code)
+        return self.check_http_response(response)
+
+    def reprocess_product(self, product_id, device_list, force=True):
+
+        payload = {}
+        payload['ForceFlag'] = force
+        
+        device_ids = []
+        if device_list:
+            for device in device_list:
+                device_payload = {}
+                device_payload['ID'] = device
+                device_ids.append(device_payload)
+        
+        payload['DeviceIds'] = device_ids
+        payload['ProductID'] = product_id
+
+        response = self.rest_v1.post('/api/mdm/products/reprocessProduct', payload=payload)
+
+        return self.check_http_response(response)
