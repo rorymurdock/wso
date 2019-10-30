@@ -527,7 +527,12 @@ class UEM():
         response = self.rest_v1.post('/api/mdm/products/%s/addsmartgroup/%s' % (product_id, group_id))
         
         if self.check_http_response(response) and self.product_is_active(product_id):
-            return self.reprocess_product(product_id=product_id, device_list=None, force=False)
+            self.debug_print('Reprocessing product %s' % product_name)
+            reprocess = self.reprocess_product(product_id=product_id, device_list=None, force=False)
+
+            if reprocess:
+                self.debug_print('Product %s reprocessed successfully' % product_name)
+            return reprocess
 
         # Encountered issue where groups would be assigned but the product not assigned
         # VMWare TDOC-6776
