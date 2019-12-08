@@ -10,13 +10,14 @@ from reqrest import REST
 
 class WSO():
     """WSO API facade"""
+
+    # TODO: Change back to default no debug
     def __init__(self, config="config", debug=True):
 
         # Sort out logging
-        log_level = logging.INFO
+        log_level = logging.ERROR
         if debug:
             log_level = logging.INFO
-            # TODO: Change back to error
 
         logging.basicConfig(filename='app.log',
                             filemode='w',
@@ -315,6 +316,7 @@ class WSO():
         return self.simple_get(url, querystring, 1)
 
     def get_group(self, group_id: int, pagesize=500, page=0):
+        """Get a group from the ID"""
         self.info("args: %s" % self.filter_locals(locals()))
         # Set base URL
         url = '/api/mdm/smartgroups/%i' % group_id
@@ -325,6 +327,7 @@ class WSO():
         return self.simple_get(url, querystring, 1)
 
     def find_group(self, name=None, pagesize=500, page=0):
+        """Find a group by name"""
         self.info("args: %s" % self.filter_locals(locals()))
         # Set base URL
         url = '/api/mdm/smartgroups/search'
@@ -616,6 +619,8 @@ class WSO():
                              macaddress=None,
                              page=None,
                              pagesize=None):
+        """Get device using a varity of parameters"""
+        self.info("args: %s" % self.filter_locals(locals()))
 
         url = "/api/mdm/devices/extensivesearch"
 
@@ -660,3 +665,370 @@ class WSO():
             page=page)
 
         return self.simple_get(url, querystring, 1)
+
+    def assign_group_to_product(self, product_id: int, group_id: int):
+        """Assigns a group to a product"""
+        self.info("args: %s" % self.filter_locals(locals()))
+        # Get product current assignments
+        # Check group is not already assigned
+        # Assign group
+
+        # Check group and product are valid
+        group_name = self.get_group_name(group_id)
+        product_name = self.get_product_name(product_id)
+        print('Assigning group %s to product %s' % (group_id, product_name))
+
+        if not group_name:
+            self.error('Invalid group ID: %i' % group_id)
+            return False
+
+        if not product_name:
+            self.error('Invalid product ID: %i' % product_id)
+            return False
+
+        assigned_groups = self.get_product_assigned_groups(product_id)
+
+        # Check if group is already assigned
+        for group in assigned_groups:
+            if group['SmartGroupId'] == group_id:
+                self.warning('Smart group %s already assigned to %s' %
+                             (product_id, group_id))
+                return True
+
+        self.debug('Assigning %s to %s' % (group_name, product_name))
+        response = self.rest_v1.post('/api/mdm/products/%s/addsmartgroup/%s' %
+                                     (product_id, group_id))
+
+        if self.check_http_response(response) and self.product_is_active(
+                product_id):
+            self.debug('Reprocessing product %s' % product_name)
+            reprocess = self.reprocess_product(product_id=product_id,
+                                               device_list=None,
+                                               force=False)
+
+            if reprocess:
+                self.debug('Product %s reprocessed successfully' %
+                           product_name)
+            return reprocess
+
+        # Encountered issue where groups would be assigned but the product not assigned
+        # VMWare TDOC-6776
+        # If we edit an existing Product created via API and add a component like F/A
+        # or Application to it using API, the product is not pushed to Policy Engine.
+        # Similarly when there is a smart group addition to an existing Product via
+        #  API we do not queue jobs to the newly added devices until we do a subsequent
+        # call to the /reprocess/ API. This behavior is expected and as per the design.
+
+        return self.check_http_response(response)
+
+    def check_no_group_assignments(self, product_id):
+        """Checks if product has no assignemnts"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        if self.get_product_assigned_groups(product_id) == []:
+            return True
+        return False
+
+    def remove_group_from_product(self, product_id, group_id):
+        """Removes the specified group from a product"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        self.info(
+            "Removing group %s from %s" %
+            (self.get_group_name(group_id), self.get_product_name(product_id)))
+        response = self.rest_v1.post(
+            '/api/mdm/products/%s/removesmartgroup/%s' %
+            (product_id, group_id))
+
+        # Check response
+        if self.check_http_response(response):
+            self.info("%i removed from %i" % (group_id, product_id))
+            return True
+        else:
+            self.error("Unable to remove %i from %i" % (group_id, product_id))
+            return False
+
+    def remove_all_groups_from_product(self, product_id):
+        """Remove all assigned groups from products"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        product_name = self.get_product_name(product_id)
+
+        if not product_name:
+            self.error('Invalid product ID %s' % product_id)
+            return False
+
+        assigned_groups = self.get_product_assigned_groups(product_id)
+
+        if assigned_groups == []:
+            self.warning('Product has no assigned groups, nothing to do')
+            return True
+
+        for group in assigned_groups:
+            print('Removing %s:%s from %s' %
+                  (group['SmartGroupId'], group['Name'], product_name))
+            response = self.remove_group_from_product(product_id,
+                                                      group['SmartGroupId'])
+            if response:
+                print('%s:%s removed from %s successfully' %
+                      (group['SmartGroupId'], group['Name'], product_name))
+
+        if self.get_product_assigned_groups(product_id) == []:
+            return True
+
+        return False
+
+    def create_group(self, name, payload):
+        """Create a group from a payload"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        # Check group doesn't already exist
+        if self.find_group(name) is not False:
+            self.error('Group %s already exists' % name)
+            return False
+
+        response = self.rest_v1.post('/api/mdm/smartgroups/', payload=payload)
+
+        if self.check_http_response(response):
+            print('Group %s created successfully, id: %s' %
+                  (name, self.str_to_json(response.text)['Value']))
+            return self.str_to_json(response.text)['Value']
+        else:  # pragma: no cover
+            self.error('Error creating group %s' % name)
+            return False
+
+    def create_group_from_devices(self, name, device_list):
+        """Create a group from a list of devices"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        # Format the list into the UEM payload
+        payload = self.format_group_payload_devices(name, device_list)
+
+        return self.create_group(name, payload)
+
+    def create_group_from_ogs(self, name, og_list):
+        """Create a group from a list of OGs"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        # Format the list into the UEM payload
+        payload = self.format_group_payload_ogs(name, og_list)
+
+        return self.create_group(name, payload)
+
+    def format_group_payload_devices(self, group_name, serial_list):
+        """Create a group from a list of serials"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        payload = {}
+        payload['Name'] = group_name
+        payload['CriteriaType'] = 'UserDevice'
+        payload['DeviceAdditions'] = []
+
+        # TODO Add check for size and revert to get all device list
+        # TODO Add duplicate device check
+        for serial in serial_list:
+            device_response = self.get_device(serial)
+            if device_response is not False:
+                self.info('Device %s is valid' % serial)
+            elif device_response is False:
+                self.warning('Device %s doesn\'t exist' % serial)
+                continue
+
+            device = {}
+            device['Id'] = device_response['Id']['Value']
+            device['Name'] = device_response['DeviceFriendlyName']
+            payload['DeviceAdditions'].append(device)
+
+        if payload['DeviceAdditions'] == []:
+            self.warning('No devices added to group %s' % group_name)
+
+        return payload
+
+    def format_group_payload_ogs(self, group_name, og_list):
+        """Take a list of OGs and format it for a group POST req"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        payload = {}
+        payload['Name'] = group_name
+        payload['CriteriaType'] = 'All'
+        payload['OrganizationGroups'] = []
+
+        for org_group in og_list:
+            og_response = self.get_og(org_group)
+            if og_response is False:
+                return False
+
+            if og_response['OrganizationGroups'] == []:
+                self.warning("OG %s doesn\'t exist" % org_group)
+                continue
+            else:
+                self.info('OG %s is valid' % org_group)
+
+            og_payload = {}
+            og_payload['Id'] = og_response['OrganizationGroups'][0]['Id']
+            og_payload['Name'] = og_response['OrganizationGroups'][0]['Name']
+            og_payload['Uuid'] = og_response['OrganizationGroups'][0]['Uuid']
+            payload['OrganizationGroups'].append(og_payload)
+
+        if payload['OrganizationGroups'] == []:
+            self.warning("No OGs added to group %s" % group_name)
+
+        return payload
+
+    def delete_group(self, group_id):
+        """Delete a group based on ID"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        group_name = self.get_group_name(group_id)
+        if group_name is False:
+            self.error("Group %s doesn't exist" % group_id)
+        else:
+            self.debug("Deleting group %s" % group_name)
+            response = self.rest_v1.delete('/api/mdm/smartgroups/%i' %
+                                           group_id)
+            self.info(response.text)
+
+            if self.check_http_response(response):
+                self.debug("Group %s deleted" % group_name)
+                return True
+            else:
+                self.error("Unable to delete %s" % group_name)
+        return False
+
+    def get_tag(self, name=None, org_group=None):
+        """Gets tags, supports all or searching, returns json"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        querystring = {}
+
+        if org_group is None:
+            # Set the product to be at the highest OG
+            querystring['OrganizationGroupId'] = self.find_og(
+                pagesize=1)['OrganizationGroups'][0]['Id']
+        if name is not None:
+            querystring['name'] = name
+
+        response = self.rest_v1.get("/api/mdm/tags/search", querystring)
+
+        if self.check_http_response(response):
+            response = json.loads(response.text)['Tags']
+
+            return response
+
+        return False  # pragma: no cover
+
+    def add_tag(self, tag_id: int, devices: list):
+        """Adds tags to device list, returns bool"""
+        return self.x_tag('add', tag_id, devices)
+
+    def remove_tag(self, tag_id: int, devices: list):
+        """Removes tags from device list, returns bool"""
+        return self.x_tag('remove', tag_id, devices)
+
+    def x_tag(self, action, tag_id: int, devices: list):
+        """Performs an action on device tags"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        if action not in ['add', 'remove']:
+            self.error('%s invalid action')
+            return False
+
+        payload = {}
+        payload['BulkValues'] = {}
+        payload['BulkValues']['Value'] = devices
+
+        response = self.rest_v1.post('/api/mdm/tags/%i/%sdevices' %
+                                     (tag_id, action),
+                                     payload=payload)
+
+        return self.check_http_response(response)
+
+    def get_tagged_devices(self, tag_id: int):
+        """Get all devices tagged with tag provided"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        response = self.simple_get('/api/mdm/tags/%i/devices' % tag_id)
+
+        if response:
+            return response['Device']
+        else:
+            return False  # pragma: no cover
+
+    def create_tag(self, tagname: str, org_group=None, tagtype=1):
+        """Create a tag"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        existing_tag = self.get_tag(tagname)
+        if existing_tag:
+            self.warning('Tag already exists: %s' %
+                         existing_tag[0]['Id']['Value'])
+            return existing_tag[0]['Id']['Value']
+
+        payload = {}
+
+        if org_group is None:
+            # Set the tag to be at the highest OG
+            payload['LocationGroupId'] = self.find_og(
+                pagesize=1)['OrganizationGroups'][0]['Id']
+
+        payload['TagName'] = tagname
+        payload['TagType'] = tagtype
+
+        response = self.rest_v1.post("/api/mdm/tags/addtag", payload)
+
+        if self.check_http_response(response):
+            return json.loads(response.text)['Value']
+
+        return False  # pragma: no cover
+
+    def delete_tag(self, tagid: int):
+        """Delete a tag"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        response = self.rest_v1.delete('/api/mdm/tags/%i' % tagid)
+        return self.check_http_response(response)
+
+    def get_printer(self, printerid: int):  # pragma: no cover
+        """Get a printer by ID"""
+        # There are no printers available for testing against
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        return self.simple_get('/api/mdm/peripherals/printer/%i' % printerid)
+
+    def move_og(self, deviceid, org_group: int, searchby='Serialnumber'):
+        """Move device in another OG"""
+        # TODO: Add more searchbys
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        querystring = {}
+        querystring['searchby'] = searchby
+        querystring['id'] = deviceid
+        querystring['ogid'] = org_group
+
+        response = self.rest_v1.post(
+            '/api/mdm/devices/commands/changeorganizationgroup',
+            querystring=querystring)
+
+        return self.check_http_response(response)
+
+    def reprocess_product(self, product_id, device_list, force=True):
+        """Reprocess a product"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        payload = {}
+        payload['ForceFlag'] = force
+
+        device_ids = []
+        if device_list:
+            for device in device_list:
+                device_payload = {}
+                device_payload['ID'] = device
+                device_ids.append(device_payload)
+
+        payload['DeviceIds'] = device_ids
+        payload['ProductID'] = product_id
+
+        response = self.rest_v1.post('/api/mdm/products/reprocessProduct',
+                                     payload=payload)
+
+        return self.check_http_response(response)
