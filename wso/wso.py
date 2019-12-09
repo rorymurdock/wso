@@ -12,7 +12,7 @@ class WSO():
     """WSO API facade"""
 
     # TODO: Change back to default no debug
-    def __init__(self, config="config", debug=True):
+    def __init__(self, config_dir="config", config_file="uem.json", debug=True):
 
         # Sort out logging
         log_level = logging.ERROR
@@ -35,7 +35,7 @@ class WSO():
         self.max_log = 9000
 
         # Get config
-        self.config = Auth(config).read_config("uem.json")
+        self.config = Auth(config_dir).read_config(config_file)
 
         if not self.config:
             self.critical("Unable to get config, run configure.py")
@@ -109,7 +109,7 @@ class WSO():
         status_codes[401] = False, 'HTTP 401: Check WSO Credentials'
         status_codes[403] = False, 'HTTP 403: Permission denied'
         status_codes[404] = False, 'HTTP 404: Not found'
-        status_codes[406] = True, 'HTTP 406: Not Acceptable'
+        status_codes[406] = False, 'HTTP 406: Not Acceptable'
         status_codes[422] = False, 'HTTP 422: Invalid searchby Parameter'
         status_codes[500] = False, 'HTTP 500: Internal server error'
 
