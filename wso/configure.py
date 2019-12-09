@@ -1,33 +1,68 @@
 """Configure Auth for WSO UEM"""
 import argparse
+import logging
 from basic_auth import Auth
 
-AUTH = Auth()
-
+LOG_LEVEL = logging.INFO
 
 class Config():
     """Configure Auth for WSO UEM"""
-    def __init__(self, output="uem.json"):
+    def __init__(self, config_dir="config", output="uem.json"):
+        logging.basicConfig(filename='config.log',
+                            filemode='w',
+                            format='%(levelname)s\t%(funcName)s\t%(message)s',
+                            level=LOG_LEVEL)
+
+        # If arguments are used it's passed as None
+        if config_dir is None:
+            config_dir = "config"
+
+        # Create logging functions
+        self.debug = logging.debug
+        self.info = logging.info
+        self.warning = logging.warning
+        self.error = logging.error
+        self.critical = logging.critical
+
         self.output = output
+        self.auth = Auth(config_dir=config_dir)
+
+    def filter_locals(self, _locals):
+        """Filter some args from local()"""
+        _list = []
+        _list.append("self")
+
+        for _item in _list:
+            try:
+                del _locals[_item]
+            except KeyError:
+                pass
+
+        return _locals
 
     def interactive(self):
         """Ask the user for the information and format the config"""
         # Get data from user
-        url = AUTH.ask("AirWatch URL")
-        username = AUTH.ask("AirWatch Username")
-        password = AUTH.ask("AirWatch Password")
-        tenant_code = AUTH.ask("AirWatch Tenantcode")
-        proxyserver = AUTH.ask("Proxy server (leave blank for none)")
+        url = self.auth.ask("AirWatch URL")
+        username = self.auth.ask("AirWatch Username")
+        password = self.auth.ask("AirWatch Password")
+        tenant_code = self.auth.ask("AirWatch Tenantcode")
+        proxyserver = self.auth.ask("Proxy server (leave blank for none)")
 
         if proxyserver != "":
-            proxyport = AUTH.ask("Proxy port")
+            proxyport = self.auth.ask("Proxy port")
+
+        config_dir = self.auth.ask("Config dir (leave blank for \"config\")")
+
+        if config_dir == "":
+            config_dir = "config"
 
         # TODO: Merge into one function
         # Encode data into base64
-        encoded = AUTH.encode(username, password)
+        encoded = self.auth.encode(username, password)
 
         # Generate data structure
-        data = AUTH.basic_config_generate(url, encoded)
+        data = self.auth.basic_config_generate(url, encoded)
 
         # Add the tentant code
         data['aw-tenant-code'] = tenant_code
@@ -38,10 +73,12 @@ class Config():
             data['proxyport'] = int(proxyport)
 
         # Return the completed data
+        self.info(data)
         return data
 
     def arguments(self, args):
         """Using data from the arguments format the config"""
+        self.info("args: %s" % self.filter_locals(locals()))
         url = args.url
         username = args.username
         password = args.password
@@ -54,10 +91,10 @@ class Config():
             proxyport = None
 
         # Encode data into base64
-        encoded = AUTH.encode(username, password)
+        encoded = self.auth.encode(username, password)
 
         # Generate data structure
-        data = AUTH.basic_config_generate(url, encoded)
+        data = self.auth.basic_config_generate(url, encoded)
 
         # Add the tentant code
         data['aw-tenant-code'] = tenant_code
@@ -72,7 +109,7 @@ class Config():
 
     def write_data(self, data, filename):
         """Write the config to a file"""
-        write = AUTH.write_config(data, filename)
+        write = self.auth.write_config(data, filename)
 
         return write
 
@@ -88,6 +125,7 @@ class Config():
         optional.add_argument("-tenantcode", help="WSO UEM tenant code")
         optional.add_argument("-proxyserver", help="Proxy server")
         optional.add_argument("-proxyport", help="Proxy port")
+        optional.add_argument("-directory", help="Config dir")
         args = parser.parse_args()
 
         return args
@@ -107,6 +145,10 @@ class Config():
             # Use arguments
             data = self.arguments(args)
 
+            # Set config dir
+            if args.directory:
+                self.directory = args.directory
+
         # Write the config to file
         if self.write_data(data, self.output):
             print("Config sucessfully written")
@@ -119,5 +161,8 @@ class Config():
 
 # This is indirectly tested by the test_main_results() funtion
 if __name__ == "__main__":  # pragma: no cover
+    # Get args if any
     ARGS = Config().get_args()
-    Config().main(ARGS)
+
+    # Get and write config
+    Config(config_dir=ARGS.directory).main(ARGS)

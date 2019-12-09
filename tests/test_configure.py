@@ -9,9 +9,11 @@ from io import StringIO
 from basic_auth import Auth
 from wso.configure import Config
 
+CONFIG_DIR = "config-tests"
+
 # Init package
-AUTH = Auth()
-WSO_CONFIG = Config()
+AUTH = Auth(config_dir=CONFIG_DIR)
+WSO_CONFIG = Config(config_dir=CONFIG_DIR)
 
 
 # Random int / str generators
@@ -59,9 +61,9 @@ def test_interactive_data_encode(monkeypatch):
     """Test entering details via std in"""
 
     # Stage the std in data
-    url = StringIO(
-        '%s\n%s\n%s\n%s\n\n' %
-        (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD, RANDOM_TENANTCODE))
+    url = StringIO('%s\n%s\n%s\n%s\n\n%s\n' %
+                   (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD,
+                    RANDOM_TENANTCODE, CONFIG_DIR))
 
     # Send std in and run the main function
     monkeypatch.setattr('sys.stdin', url)
@@ -76,9 +78,10 @@ def test_interactive_data_encode_w_proxy(monkeypatch):
     """Test entering details via std in"""
 
     # Stage the std in data
-    url = StringIO('%s\n%s\n%s\n%s\n%s\n%s' %
-                   (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD,
-                    RANDOM_TENANTCODE, RANDOM_PROXYSERVER, RANDOM_PROXYPORT))
+    url = StringIO(
+        '%s\n%s\n%s\n%s\n%s\n%s\n%s' %
+        (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD, RANDOM_TENANTCODE,
+         RANDOM_PROXYSERVER, RANDOM_PROXYPORT, CONFIG_DIR))
 
     # Send std in and run the main function
     monkeypatch.setattr('sys.stdin', url)
@@ -107,7 +110,8 @@ def test_arguments_data_encode_w_proxy():
                               password=RANDOM_PASSWORD,
                               tenantcode=RANDOM_TENANTCODE,
                               proxyserver=RANDOM_PROXYSERVER,
-                              proxyport=RANDOM_PROXYPORT)
+                              proxyport=RANDOM_PROXYPORT,
+                              directory=CONFIG_DIR)
 
     result = WSO_CONFIG.arguments(args)
 
@@ -119,8 +123,9 @@ def test_main_arguments():
     args = argparse.Namespace(url=RANDOM_URL,
                               username=RANDOM_USERNAME,
                               password=RANDOM_PASSWORD,
-                              tenantcode=RANDOM_TENANTCODE)
-    result = Config("wso_args.json").main(args)
+                              tenantcode=RANDOM_TENANTCODE,
+                              directory=CONFIG_DIR)
+    result = Config(config_dir=CONFIG_DIR, output="wso_args.json").main(args)
 
     assert result is True
 
@@ -132,17 +137,19 @@ def test_main_arguments_w_proxy():
                               password=RANDOM_PASSWORD,
                               tenantcode=RANDOM_TENANTCODE,
                               proxyserver=RANDOM_PROXYSERVER,
-                              proxyport=RANDOM_PROXYPORT)
-    result = Config("wso_args_proxy.json").main(args)
+                              proxyport=RANDOM_PROXYPORT,
+                              directory=CONFIG_DIR)
+    result = Config(config_dir=CONFIG_DIR,
+                    output="wso_args_proxy.json").main(args)
 
     assert result is True
 
 
 def test_main_interactive(monkeypatch):
     """Test mocking the std in and writing the config"""
-    url = StringIO(
-        '%s\n%s\n%s\n%s\n\n' %
-        (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD, RANDOM_TENANTCODE))
+    url = StringIO('%s\n%s\n%s\n%s\n\n\%s\n' %
+                   (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD,
+                    RANDOM_TENANTCODE, CONFIG_DIR))
 
     # Send std in and run the main function
     monkeypatch.setattr('sys.stdin', url)
@@ -153,16 +160,18 @@ def test_main_interactive(monkeypatch):
                               password=None,
                               tenantcode=None)
 
-    result = Config("wso_interactive.json").main(args)
+    result = Config(config_dir=CONFIG_DIR,
+                    output="wso_interactive.json").main(args)
 
     assert result is True
 
 
 def test_main_interactive_w_proxy(monkeypatch):
     """Test mocking the std in and writing the config"""
-    url = StringIO('%s\n%s\n%s\n%s\n%s\n%s' %
-                   (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD,
-                    RANDOM_TENANTCODE, RANDOM_PROXYSERVER, RANDOM_PROXYPORT))
+    url = StringIO(
+        '%s\n%s\n%s\n%s\n%s\n%s\n\n%s' %
+        (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD, RANDOM_TENANTCODE,
+         RANDOM_PROXYSERVER, RANDOM_PROXYPORT, CONFIG_DIR))
 
     # Send std in and run the main function
     monkeypatch.setattr('sys.stdin', url)
@@ -175,7 +184,8 @@ def test_main_interactive_w_proxy(monkeypatch):
                               proxyserver=None,
                               proxyport=None)
 
-    result = Config("wso_interactive_proxy.json").main(args)
+    result = Config(config_dir=CONFIG_DIR,
+                    output="wso_interactive_proxy.json").main(args)
 
     assert result is True
 
@@ -243,10 +253,9 @@ def test_main_results():
     # Due to complexities testing with arguments to get full coverage
     # run the script externally with full arguments
     os.popen('python3 -m pip install -e .')
-    os.popen(
-        'python3 wso/configure.py -url cn1234.awtest.com\
-             -username citests -password hunter2 -tenantcode shibboleet'
-    ).read()
+    os.popen('python3 wso/configure.py -url cn1234.awtest.com\
+             -username citests -password hunter2 -tenantcode shibboleet -directory %s'
+             % CONFIG_DIR).read()
 
     filename = "uem.json"
 
