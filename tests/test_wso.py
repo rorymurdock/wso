@@ -314,11 +314,18 @@ def test_get_group_name():
     assert UEM.get_group_name(TEST_GROUP_ID) == TEST_GROUP_NAME
     assert UEM.get_group_name("BADGROUP") is False
 
-# def test_filter_locals():
-#     test = WSO.filter_locals(self="Test")
-#     test2 = WSO.filter_locals(test="123")
+def test_filter_locals():
+    _local = {}
+    _local["path"] = "/api/system/info"
+    _local["self"] = "3a863bfd0"
+    _local["version"] = 1
 
-#     pass
+    org_len = len(_local)
+
+    _local_filtered = UEM.filter_locals(_local)
+
+    assert len(_local_filtered) == org_len - 1
+    assert "self" not in _local_filtered
 
 def test_remaining_api_calls():
     """Checks remaining API calls"""
