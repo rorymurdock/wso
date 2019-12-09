@@ -301,11 +301,31 @@ class UEM():
         """Resolves a smartgroup ID to a name"""
         return self.get_name("smartgroups", group_id)
 
-    def get_product(self, name):
+    def get_product(self, name, pagesize=500):
         """Search for product by name"""
-        url = '/api/mdm/products/search?name=%s' % name
+        querystring = {}
+        querystring['pagesize'] = pagesize
+        querystring['name'] = name
+        
+        response = self.basic_url('/api/mdm/products/search/', querystring=querystring)
 
-        return self.basic_url(url)
+        return response
+    
+    def get_product_extensive(self, product_id: int, organizationgroupid = None, modifiedfrom = None,
+                                modifiedtill = None, managedbyorganizationgroupid = None, name = None,
+                                platform = None, customattributes = None, orderby = None, sortorder = None,
+                                page = None, pagesize = None):
+        """Get extensive product details"""
+        
+        querystring = {}
+        querystring['pagesize'] = pagesize
+        querystring['name'] = name
+        querystring['id'] = product_id
+        
+        response = self.basic_url('/api/mdm/products/extensivesearch/', querystring=querystring)
+
+        return response
+
     
     def get_product_device_state(self, product_id: int, state: str, pagesize=None):
         if state not in ['compliant', 'inprogress', 'failed', 'assigned']:
@@ -646,16 +666,21 @@ class UEM():
         payload['CriteriaType'] = 'All'
         payload['OrganizationGroups'] = []
 
-        for org_group in og_list:
-            og_response = self.get_og(org_group)
-            if og_response is False:
-                return False
+        # Get the OG list from WSO
+        wso_ogs = self.get_og(pagesize=99999)['OrganizationGroup']
 
-            if og_response['OrganizationGroups'] == []:
+        # Create a list of OGs
+        wso_og_list = []
+        for wso_og in wso_ogs:
+            wso_og_list.append(wso_og['Name'])
+
+        for org_group in og_list:
+            if org_group in wso_og_list:
+                print('OG %s is valid' % org_group)
+            else:
                 print('Warning: OG %s doesn\'t exist' % org_group)
                 continue
-            else:
-                print('OG %s is valid' % org_group)
+                #TODO Create map / table
 
             og_payload = {}
             og_payload['Id'] = og_response['OrganizationGroups'][0]['Id']
@@ -794,3 +819,17 @@ class UEM():
         response = self.rest_v1.post('/api/mdm/products/reprocessProduct', payload=payload)
 
         return self.check_http_response(response)
+
+    # TODO 403 on all users
+    def get_all_users(self, attributes=True):
+        querystring = {}
+        response = self.basic_url('/api/system/users', querystring=querystring)
+
+        return response
+    
+    # TODO 500 on all internal users
+    def get_user(self, user_id: int):
+        querystring = {}
+        response = self.basic_url('/api/system/users/%i' % user_id, querystring=querystring)
+
+        return response
