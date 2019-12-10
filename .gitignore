@@ -107,3 +107,6 @@ venv.bak/
 config/
 .devcontainer/
 .DS_Store
+.vscode/
+config
+config-*
