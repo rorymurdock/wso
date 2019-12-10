@@ -263,6 +263,7 @@ def test_querystring():
     assert QS["pagesize"] == pagesize
     assert QS["user"] == user
 
+
 def test_simple_get():
     filename = 'postman-config.json'
 
@@ -282,13 +283,15 @@ def test_simple_get():
     # Check v2 default
     response = wso.simple_get("/headers/")
     assert response["headers"]["accept"] == "application/json;version=2"
-    assert response["headers"]["authorization"] == AUTH.encode(RANDOM_USERNAME, RANDOM_PASSWORD)
+    assert response["headers"]["authorization"] == AUTH.encode(
+        RANDOM_USERNAME, RANDOM_PASSWORD)
     assert response["headers"]["aw-tenant-code"] == RANDOM_TENANTCODE
 
     # Check v1
     response = wso.simple_get("/headers/", version=1)
     assert response["headers"]["accept"] == "application/json;version=1"
-    assert response["headers"]["authorization"] == AUTH.encode(RANDOM_USERNAME, RANDOM_PASSWORD)
+    assert response["headers"]["authorization"] == AUTH.encode(
+        RANDOM_USERNAME, RANDOM_PASSWORD)
     assert response["headers"]["aw-tenant-code"] == RANDOM_TENANTCODE
 
     # Test querystring
@@ -304,17 +307,22 @@ def test_simple_get():
 
     # Test over 9k size
     querystring["9k"] = "z" * 9000
-    response = wso.simple_get("/status/204", querystring=querystring, version=1)
+    response = wso.simple_get("/status/204",
+                              querystring=querystring,
+                              version=1)
+
 
 def test_get_product_name():
     """Tests resolving a product id to a name"""
     assert UEM.get_product_name(TEST_PRODUCT_ID) == TEST_PRODUCT_NAME
     assert UEM.get_product_name("BADPRODUCT") is False
 
+
 def test_get_group_name():
     """Tests resolving a group id to a name"""
     assert UEM.get_group_name(TEST_GROUP_ID) == TEST_GROUP_NAME
     assert UEM.get_group_name("BADGROUP") is False
+
 
 def test_filter_locals():
     _local = {}
@@ -332,9 +340,11 @@ def test_filter_locals():
     _local_filtered = UEM.filter_locals(_local)
     assert len(_local_filtered) == org_len - 1
 
+
 def test_remaining_api_calls():
     """Checks remaining API calls"""
     assert isinstance(UEM.remaining_api_calls(), int) is True
+
 
 def test_find_og():
     og = UEM.find_og(pagesize=1)
@@ -343,6 +353,7 @@ def test_find_og():
     staged = UEM.find_og("Staged", pagesize=1)
     assert staged["OrganizationGroups"][0]["Id"] == 4801
 
+
 def test_get_og():
     og_id = 4801
 
@@ -350,6 +361,7 @@ def test_get_og():
 
     assert og["GroupId"] == "pytest_stagedOG"
     assert og["Name"] == "Staged"
+
 
 def test_get_all_ogs():
 
@@ -362,6 +374,7 @@ def test_get_all_ogs():
     assert ogs["OrganizationGroups"][1]["Name"] == "Staged"
     assert ogs["OrganizationGroups"][1]["Id"] == 4801
 
+
 def test_bulk_limits():
 
     limits = UEM.bulk_limits()
@@ -371,6 +384,7 @@ def test_bulk_limits():
     assert limits["GPS"] == 500
     assert limits["LockDevice"] == 3000
     assert limits["SendMessage"] == 3000
+
 
 def test_device_counts():
 
@@ -386,6 +400,7 @@ def test_device_counts():
     assert counts["Security"]["NotEncrypted"] == 0
     assert counts["TotalDevices"] == 1
 
+
 def test_get_group():
     """Tests getting group info"""
     group = UEM.get_group(group_id=TEST_GROUP_ID)
@@ -393,18 +408,24 @@ def test_get_group():
     assert group["Name"] == "PyTest CI Smart group"
     assert group["Devices"] == 1
 
+
 def test_find_group():
     group = UEM.find_group(name=TEST_GROUP_NAME)
 
     assert group["SmartGroups"][0]["SmartGroupID"] == 8686
     assert group["SmartGroups"][0]["Devices"] == 1
 
+
 def test_create_product():
     # Create a test product
-    created_product_id = UEM.create_product('CI Test - %s' % SESSION_ID, 'API CI Testing product, can be safely deleted', 5, 622, 5)
+    created_product_id = UEM.create_product(
+        'CI Test - %s' % SESSION_ID,
+        'API CI Testing product, can be safely deleted', 5, 622, 5)
 
     # Create a test product by specify the root OG
-    created_product_id_x = UEM.create_product('CI Test - %s X' % SESSION_ID, 'API CI Testing product, can be safely deleted', 5, 622, 5, ROOT_OG_ID)
+    created_product_id_x = UEM.create_product(
+        'CI Test - %s X' % SESSION_ID,
+        'API CI Testing product, can be safely deleted', 5, 622, 5, ROOT_OG_ID)
 
     assert isinstance(created_product_id, int) is True
 
@@ -418,10 +439,12 @@ def test_find_product():
 
     assert product["Products"][0]["Name"] == "CI Test - %s" % SESSION_ID
 
+
 def test_get_product():
     product = UEM.get_product(TEST_PRODUCT_ID)
 
     assert product["Name"] == TEST_PRODUCT_NAME
+
 
 def test_get_product_device_state():
     # Test bad ID
@@ -434,7 +457,9 @@ def test_get_product_device_state():
     assert UEM.get_product_device_state(0, 'badassigned') == None
 
     # Test inactive product
-    assert UEM.get_product_device_state(TEST_PRODUCT_ID, 'assigned', pagesize=10) == None
+    assert UEM.get_product_device_state(TEST_PRODUCT_ID,
+                                        'assigned',
+                                        pagesize=10) == None
 
     # Test active product
     devices = {}
@@ -451,24 +476,36 @@ def test_get_product_device_state():
     devices['PageSize'] = 10
     devices['Total'] = 1
 
-    assert UEM.get_product_device_state(TEST_ASSIGNED_PRODUCT, 'assigned', pagesize=10) == devices["Devices"]
+    assert UEM.get_product_device_state(TEST_ASSIGNED_PRODUCT,
+                                        'assigned',
+                                        pagesize=10) == devices["Devices"]
+
 
 def test_get_product_assigned_groups():
-    product_id_no_group = UEM.find_product("CI Test - %s" % SESSION_ID)["Products"][0]["ID"]["Value"]
+    product_id_no_group = UEM.find_product(
+        "CI Test - %s" % SESSION_ID)["Products"][0]["ID"]["Value"]
     # Check product group assignements
     assert UEM.get_product_assigned_groups(0) is False
     assert UEM.get_product_assigned_groups(product_id_no_group) == []
 
-    assert UEM.get_product_assigned_groups(TEST_ASSIGNED_PRODUCT) == [{'SmartGroupId': 9048, 'Name': 'CI Assigned Group'}]
+    assert UEM.get_product_assigned_groups(TEST_ASSIGNED_PRODUCT) == [{
+        'SmartGroupId':
+        9048,
+        'Name':
+        'CI Assigned Group'
+    }]
+
 
 def test_product_is_active():
     """Test product activation state"""
     assert UEM.product_is_active(TEST_ACTIVE_PRODUCT_ID) is True
     assert UEM.product_is_active(TEST_PRODUCT_ID) is False
 
+
 def test_activate_no_group_product():
     """Test activating a product with no assigned groups"""
     assert UEM.activate_product(TEST_PRODUCT_ID) is False
+
 
 def test_assign_group_to_product():
     """Tests assigning groups to a product"""
@@ -479,7 +516,8 @@ def test_assign_group_to_product():
 
     # Test reprocessing
     UEM.remove_group_from_product(TEST_ACTIVE_PRODUCT_ID, TEST_GROUP_ID)
-    assert UEM.assign_group_to_product(TEST_ACTIVE_PRODUCT_ID, TEST_GROUP_ID) is True
+    assert UEM.assign_group_to_product(TEST_ACTIVE_PRODUCT_ID,
+                                       TEST_GROUP_ID) is True
 
     # Should still return True if already assigned
     assert UEM.assign_group_to_product(TEST_PRODUCT_ID, TEST_GROUP_ID) is True
@@ -490,15 +528,18 @@ def test_assign_group_to_product():
     # Invalid product ID
     assert UEM.assign_group_to_product(0, TEST_GROUP_ID) is False
 
+
 def test_activate_product():
     """Tests activating a product"""
     assert UEM.activate_product(TEST_PRODUCT_ID) is True
     assert UEM.activate_product(TEST_PRODUCT_ID) is True
     assert UEM.activate_product(TEST_AUTODEPLOY_PRODUCT) is True
 
+
 def test_deactivate_product():
     """Tests deactivating a product"""
     assert UEM.deactivate_product(TEST_PRODUCT_ID) is True
+
 
 def test_remove_groups_from_products():
     """Test removing all groups from a product"""
@@ -509,16 +550,20 @@ def test_remove_groups_from_products():
     # Test bad product ID
     assert UEM.remove_all_groups_from_product(0) is False
 
+
 def test_check_no_group_assignments():
     assert UEM.check_no_group_assignments(TEST_PRODUCT_ID) is True
     assert UEM.check_no_group_assignments(TEST_ACTIVE_PRODUCT_ID) is False
 
+
 def test_delete_product():
-    created_product_id = UEM.find_product("CI Test - %s" % SESSION_ID)["Products"][0]["ID"]["Value"]
+    created_product_id = UEM.find_product(
+        "CI Test - %s" % SESSION_ID)["Products"][0]["ID"]["Value"]
 
     assert UEM.delete_product(created_product_id) is True
     assert UEM.delete_product(created_product_id) is False
     assert UEM.delete_product(TEST_ACTIVE_PRODUCT_ID) is False
+
 
 def test_get_device():
     """Test getting device info"""
@@ -526,17 +571,21 @@ def test_get_device():
     assert device['Id']['Value'] == TEST_DEVICE_ID
     assert UEM.get_device() is False
 
+
 def test_get_all_devices():
     """Test getting all device info"""
     devices = UEM.get_all_devices()
     assert devices["Devices"][0]['Id']['Value'] == TEST_DEVICE_ID
 
+
 def test_get_device_ip():
     """Tests getting a device IP"""
-    assert UEM.get_device_ip(serial_number=TEST_DEVICE_SERIAL) == TEST_DEVICE_IP
+    assert UEM.get_device_ip(
+        serial_number=TEST_DEVICE_SERIAL) == TEST_DEVICE_IP
     assert UEM.get_device_ip(device_id=TEST_DEVICE_ID) == TEST_DEVICE_IP
     assert UEM.get_device_ip('11111') is False
     assert UEM.get_device_ip() is False
+
 
 def test_get_device_extensive():
     """Test getting extensive device info"""
@@ -558,18 +607,22 @@ def test_get_device_extensive():
     assert response['Products'][0]['Name'] == 'Product Set 1'
     assert response['Products'][0]['Status'] == 'Compliant'
     assert response['SmartGroups'][0]['SmartGroupId'] == 1155
-    assert response['SmartGroups'][0]['SmartGroupUuid'] == '14a44cb1-5b15-e711-80c4-0025b5010089'
+    assert response['SmartGroups'][0][
+        'SmartGroupUuid'] == '14a44cb1-5b15-e711-80c4-0025b5010089'
     assert response['SmartGroups'][0]['Name'] == 'All Devices'
     assert response['CustomAttributes'][0]['Name'] == 'identity.deviceModel'
     assert response['CustomAttributes'][0]['Value'] == 'TC51'
-    assert response['CustomAttributes'][0]['ApplicationGroup'] == 'com.airwatch.androidagent.identity.xml'
+    assert response['CustomAttributes'][0][
+        'ApplicationGroup'] == 'com.airwatch.androidagent.identity.xml'
 
     assert UEM.get_device_extensive() == False
+
 
 def test_create_group_from_devices():
     """Creates a group based on a list of devices, deletes it"""
 
-    group = UEM.create_group_from_devices('CI Test - %s' % SESSION_ID, [TEST_DEVICE_SERIAL, 12345])
+    group = UEM.create_group_from_devices('CI Test - %s' % SESSION_ID,
+                                          [TEST_DEVICE_SERIAL, 12345])
     assert isinstance(group, int)
 
     assert UEM.delete_group(group) is True
@@ -578,24 +631,30 @@ def test_create_group_from_devices():
 
     assert UEM.delete_group(0) is False
 
-    assert UEM.create_group_from_devices('CI Test - %s' % SESSION_ID + "X", []) is False
+    assert UEM.create_group_from_devices('CI Test - %s' % SESSION_ID + "X",
+                                         []) is False
+
 
 def test_create_delete_group_from_og():
     """Creates a group based on a list of OGs, deletes it"""
 
-    group = UEM.create_group_from_ogs('CI Test - %s' % SESSION_ID, [ROOT_OG, "ABCD"])
+    group = UEM.create_group_from_ogs('CI Test - %s' % SESSION_ID,
+                                      [ROOT_OG, "ABCD"])
     assert isinstance(group, int)
 
-    response = UEM.create_group_from_ogs('CI Test - %s' % SESSION_ID, [ROOT_OG])
+    response = UEM.create_group_from_ogs('CI Test - %s' % SESSION_ID,
+                                         [ROOT_OG])
     assert response is False
 
-    assert UEM.create_group_from_ogs('CI Test - %s' % SESSION_ID + "X", []) is False
+    assert UEM.create_group_from_ogs('CI Test - %s' % SESSION_ID + "X",
+                                     []) is False
 
     assert UEM.delete_group(group) is True
     assert UEM.delete_group(0) is False
 
     # Try to delete a group that is assigned
     assert UEM.delete_group(ASSIGNED_GROUP) is False
+
 
 def test_tag_full():
     """Test creating a tag, assign, unassign, and delete"""
@@ -611,32 +670,39 @@ def test_tag_full():
     assert UEM.remove_tag(tag_id, [TEST_DEVICE_ID]) is True
     assert UEM.delete_tag(tag_id) is True
 
+
 def test_tag_errors():
     assert UEM.x_tag('badaction', 999, [0, 0]) is False
+
 
 def test_get_printer():
     # No printers in environment no chance of getting one
     # Test only that printer doesn't exist
     assert UEM.get_printer(0) is False
 
+
 def test_move_og():
-    change_og_id = UEM.find_og(name=OG_TO_MOVE_TO)['OrganizationGroups'][0]['Id']
+    change_og_id = UEM.find_og(
+        name=OG_TO_MOVE_TO)['OrganizationGroups'][0]['Id']
 
     # Move device to the root OG to start with
     UEM.move_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
-    assert UEM.get_device(serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
+    assert UEM.get_device(
+        serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
 
     # Move device to the Staging OG
     UEM.move_og(TEST_DEVICE_SERIAL, change_og_id)
-    assert UEM.get_device(serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == OG_TO_MOVE_TO
+    assert UEM.get_device(
+        serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == OG_TO_MOVE_TO
 
     # Move device back to the root OG to finish up
     UEM.move_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
-    assert UEM.get_device(serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
-
+    assert UEM.get_device(
+        serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
 
     # TODO
     # def reprocess_product(self, product_id, device_list, force=True):
+
 
 def test_tidy_up():
     """Delete any leftover artifacts from tests"""

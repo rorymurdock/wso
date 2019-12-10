@@ -5,6 +5,7 @@ from basic_auth import Auth
 
 LOG_LEVEL = logging.INFO
 
+
 class Config():
     """Configure Auth for WSO UEM"""
     def __init__(self, config_dir="config", output="uem.json"):
@@ -135,10 +136,8 @@ class Config():
         # Check for args
         if None in (args.url, args.username, args.password, args.tenantcode):
             # Run in interactive mode
-            print(
-                "No arguments found or missing arguments\n\
-                Running in interactive mode"
-            )
+            print("No arguments found or missing arguments\n\
+                Running in interactive mode")
             print("Run with -h for more info")
             data = self.interactive()
         else:

@@ -12,7 +12,10 @@ class WSO():
     """WSO API facade"""
 
     # TODO: Change back to default no debug
-    def __init__(self, config_dir="config", config_file="uem.json", debug=True):
+    def __init__(self,
+                 config_dir="config",
+                 config_file="uem.json",
+                 debug=True):
 
         # Sort out logging
         log_level = logging.ERROR
@@ -259,7 +262,7 @@ class WSO():
 
             return int(response.headers['X-RateLimit-Remaining'])
 
-        else:   # pragma: no cover
+        else:  # pragma: no cover
             self.error("Error getting response header")
             return False
 
@@ -483,7 +486,8 @@ class WSO():
             self.error("Product %s doesn't exist" % product_id)
 
         if self.get_product_assigned_groups(product_id):
-            self.critical("Product %s has groups assigned, unable to delete" % product_id)
+            self.critical("Product %s has groups assigned, unable to delete" %
+                          product_id)
             return False
 
         else:
@@ -770,12 +774,13 @@ class WSO():
 
         for group in assigned_groups:
             self.debug('Removing %s:%s from %s' %
-                  (group['SmartGroupId'], group['Name'], product_name))
+                       (group['SmartGroupId'], group['Name'], product_name))
             response = self.remove_group_from_product(product_id,
                                                       group['SmartGroupId'])
             if response:
-                self.debug('%s:%s removed from %s successfully' %
-                      (group['SmartGroupId'], group['Name'], product_name))
+                self.debug(
+                    '%s:%s removed from %s successfully' %
+                    (group['SmartGroupId'], group['Name'], product_name))
 
         if self.get_product_assigned_groups(product_id) == []:
             return True
@@ -907,7 +912,8 @@ class WSO():
         return False
 
     def get_all_tags(self, org_group=None, pagesize=500, page=1):
-        return self.find_tag(name=None, org_group=org_group) #, pagesize=size, page=page)
+        return self.find_tag(name=None,
+                             org_group=org_group)  #, pagesize=size, page=page)
 
     def find_tag(self, name=None, org_group=None):
         """Gets tags, supports all or searching, returns json"""
@@ -1015,9 +1021,13 @@ class WSO():
         # TODO: Add more searchbys
         self.info("args: %s" % self.filter_locals(locals()))
 
-        querystring = self.querystring(id=device_id, ogid=og_id, searchby=search_by)
+        querystring = self.querystring(id=device_id,
+                                       ogid=og_id,
+                                       searchby=search_by)
 
-        response = self.rest_v1.post('/api/mdm/devices/commands/changeorganizationgroup', querystring=querystring)
+        response = self.rest_v1.post(
+            '/api/mdm/devices/commands/changeorganizationgroup',
+            querystring=querystring)
 
         return self.check_http_response(response)
 
@@ -1043,7 +1053,13 @@ class WSO():
 
         return self.check_http_response(response)
 
-    def create_product(self, name, description, action_type_id, action_item_id, platform_id, managed_by_og=None):
+    def create_product(self,
+                       name,
+                       description,
+                       action_type_id,
+                       action_item_id,
+                       platform_id,
+                       managed_by_og=None):
         """Creates a product using fileId, actionType.
          Product will be inactive and has no assigned groups. Returns int of new ID"""
         self.info("args: %s" % self.filter_locals(locals()))
@@ -1064,7 +1080,8 @@ class WSO():
 
         # Set the product to be at the highest OG
         if managed_by_og is None:
-            payload['ManagedByOrganizationGroupID'] = self.find_og(pagesize=1)["OrganizationGroups"][0]["Id"]
+            payload['ManagedByOrganizationGroupID'] = self.find_og(
+                pagesize=1)["OrganizationGroups"][0]["Id"]
         else:
             payload['ManagedByOrganizationGroupID'] = managed_by_og
         payload['Description'] = description
@@ -1096,5 +1113,6 @@ class WSO():
                 self.error("Unable to create product %s" % product_name)
 
         else:
-            self.error("Product %s already exists, unable to create" % product_name)
+            self.error("Product %s already exists, unable to create" %
+                       product_name)
             return False
