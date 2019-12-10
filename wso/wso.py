@@ -225,7 +225,7 @@ class WSO():
         _list = []
         _list.append("self")
 
-        for _item in _list:
+        for _item in list(_list):
             try:
                 del _locals[_item]
             except KeyError:
@@ -259,7 +259,7 @@ class WSO():
 
             return int(response.headers['X-RateLimit-Remaining'])
 
-        else:
+        else:   # pragma: no cover
             self.error("Error getting response header")
             return False
 
@@ -279,7 +279,7 @@ class WSO():
         # Add arguments
         querystring = self.querystring(name=name, pagesize=pagesize, page=page)
 
-        return self.simple_get(url, querystring, 1)
+        return self.simple_get(url, querystring, 2)
 
     def get_og(self, group_id: int):
         """Abstract function of find_og()"""
@@ -374,7 +374,7 @@ class WSO():
             return None
 
         # Set base URL
-        url = '/api/mdm/products/%i' % product_id
+        url = '/api/mdm/products/%i/%s' % (product_id, state)
 
         # Add arguments
         querystring = self.querystring(pagesize=pagesize, page=page)
@@ -454,12 +454,15 @@ class WSO():
         # Set base URL
         url = '/api/mdm/products/%i/%s' % (product_id, action)
 
-        response = self.simple_get(url, version=1)
+        response = self.rest_v1.post(url)
 
-        if response:
+        if self.check_http_response(response):
             self.info("%s has been %sd" % (product['Name'], action))
+        else:  # pragma: no cover
+            # Shouln't reach this state however log it just in case
+            self.error("Unable to %s %s" % (action, product_id))
 
-        return response
+        return self.check_http_response(response)
 
     def activate_product(self, product_id, skip_check=False):
         """Activates a product"""
@@ -480,8 +483,7 @@ class WSO():
             self.error("Product %s doesn't exist" % product_id)
 
         if self.get_product_assigned_groups(product_id):
-            self.critical("Product has groups assigned, unable to delete" %
-                          product_id)
+            self.critical("Product %s has groups assigned, unable to delete" % product_id)
             return False
 
         else:
@@ -744,9 +746,11 @@ class WSO():
         if self.check_http_response(response):
             self.info("%i removed from %i" % (group_id, product_id))
             return True
-        else:
+        else:  # pragma: no cover
+            # Shouln't reach this state however log it just in case
             self.error("Unable to remove %i from %i" % (group_id, product_id))
-            return False
+
+        return False
 
     def remove_all_groups_from_product(self, product_id):
         """Remove all assigned groups from products"""
@@ -765,25 +769,26 @@ class WSO():
             return True
 
         for group in assigned_groups:
-            print('Removing %s:%s from %s' %
+            self.debug('Removing %s:%s from %s' %
                   (group['SmartGroupId'], group['Name'], product_name))
             response = self.remove_group_from_product(product_id,
                                                       group['SmartGroupId'])
             if response:
-                print('%s:%s removed from %s successfully' %
+                self.debug('%s:%s removed from %s successfully' %
                       (group['SmartGroupId'], group['Name'], product_name))
 
         if self.get_product_assigned_groups(product_id) == []:
             return True
 
-        return False
+        # Shouln't reach this state however log it just in case
+        return False  # pragma: no cover
 
     def create_group(self, name, payload):
         """Create a group from a payload"""
         self.info("args: %s" % self.filter_locals(locals()))
 
         # Check group doesn't already exist
-        if self.find_group(name) is not False:
+        if self.find_group(name) is not None:
             self.error('Group %s already exists' % name)
             return False
 
@@ -804,7 +809,10 @@ class WSO():
         # Format the list into the UEM payload
         payload = self.format_group_payload_devices(name, device_list)
 
-        return self.create_group(name, payload)
+        if payload:
+            return self.create_group(name, payload)
+
+        return False
 
     def create_group_from_ogs(self, name, og_list):
         """Create a group from a list of OGs"""
@@ -813,7 +821,10 @@ class WSO():
         # Format the list into the UEM payload
         payload = self.format_group_payload_ogs(name, og_list)
 
-        return self.create_group(name, payload)
+        if payload:
+            return self.create_group(name, payload)
+
+        return False
 
     def format_group_payload_devices(self, group_name, serial_list):
         """Create a group from a list of serials"""
@@ -827,7 +838,7 @@ class WSO():
         # TODO Add check for size and revert to get all device list
         # TODO Add duplicate device check
         for serial in serial_list:
-            device_response = self.get_device(serial)
+            device_response = self.get_device(serial_number=serial)
             if device_response is not False:
                 self.info('Device %s is valid' % serial)
             elif device_response is False:
@@ -840,7 +851,8 @@ class WSO():
             payload['DeviceAdditions'].append(device)
 
         if payload['DeviceAdditions'] == []:
-            self.warning('No devices added to group %s' % group_name)
+            self.error('No devices added to group %s' % group_name)
+            return False
 
         return payload
 
@@ -854,11 +866,9 @@ class WSO():
         payload['OrganizationGroups'] = []
 
         for org_group in og_list:
-            og_response = self.get_og(org_group)
-            if og_response is False:
-                return False
+            og_response = self.find_og(name=org_group)
 
-            if og_response['OrganizationGroups'] == []:
+            if og_response["OrganizationGroups"] == []:
                 self.warning("OG %s doesn\'t exist" % org_group)
                 continue
             else:
@@ -871,7 +881,8 @@ class WSO():
             payload['OrganizationGroups'].append(og_payload)
 
         if payload['OrganizationGroups'] == []:
-            self.warning("No OGs added to group %s" % group_name)
+            self.error("No OGs added to group %s" % group_name)
+            return False
 
         return payload
 
@@ -880,7 +891,7 @@ class WSO():
         self.info("args: %s" % self.filter_locals(locals()))
 
         group_name = self.get_group_name(group_id)
-        if group_name is False:
+        if group_name is None:
             self.error("Group %s doesn't exist" % group_id)
         else:
             self.debug("Deleting group %s" % group_name)
@@ -895,8 +906,12 @@ class WSO():
                 self.error("Unable to delete %s" % group_name)
         return False
 
-    def get_tag(self, name=None, org_group=None):
+    def get_all_tags(self, org_group=None, pagesize=500, page=1):
+        return self.find_tag(name=None, org_group=org_group) #, pagesize=size, page=page)
+
+    def find_tag(self, name=None, org_group=None):
         """Gets tags, supports all or searching, returns json"""
+        # TODO add pagesize
         self.info("args: %s" % self.filter_locals(locals()))
 
         querystring = {}
@@ -958,7 +973,7 @@ class WSO():
         """Create a tag"""
         self.info("args: %s" % self.filter_locals(locals()))
 
-        existing_tag = self.get_tag(tagname)
+        existing_tag = self.find_tag(tagname)
         if existing_tag:
             self.warning('Tag already exists: %s' %
                          existing_tag[0]['Id']['Value'])
@@ -995,19 +1010,14 @@ class WSO():
 
         return self.simple_get('/api/mdm/peripherals/printer/%i' % printerid)
 
-    def move_og(self, deviceid, org_group: int, searchby='Serialnumber'):
+    def move_og(self, device_id, og_id: int, search_by='Serialnumber'):
         """Move device in another OG"""
         # TODO: Add more searchbys
         self.info("args: %s" % self.filter_locals(locals()))
 
-        querystring = {}
-        querystring['searchby'] = searchby
-        querystring['id'] = deviceid
-        querystring['ogid'] = org_group
+        querystring = self.querystring(id=device_id, ogid=og_id, searchby=search_by)
 
-        response = self.rest_v1.post(
-            '/api/mdm/devices/commands/changeorganizationgroup',
-            querystring=querystring)
+        response = self.rest_v1.post('/api/mdm/devices/commands/changeorganizationgroup', querystring=querystring)
 
         return self.check_http_response(response)
 
@@ -1032,3 +1042,59 @@ class WSO():
                                      payload=payload)
 
         return self.check_http_response(response)
+
+    def create_product(self, name, description, action_type_id, action_item_id, platform_id, managed_by_og=None):
+        """Creates a product using fileId, actionType.
+         Product will be inactive and has no assigned groups. Returns int of new ID"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        action = {}
+
+        action['ActionTypeId'] = action_type_id
+        # Item ID
+        # Unable to create files using API
+        # File must exist already
+        action['ItemId'] = action_item_id
+
+        # Persist post enterprise reset
+        action['Persist'] = 'True'
+
+        payload = {}
+        payload['Name'] = name
+
+        # Set the product to be at the highest OG
+        if managed_by_og is None:
+            payload['ManagedByOrganizationGroupID'] = self.find_og(pagesize=1)["OrganizationGroups"][0]["Id"]
+        else:
+            payload['ManagedByOrganizationGroupID'] = managed_by_og
+        payload['Description'] = description
+
+        # For safety all new products are inactive
+        # Use activate_product and assign_group functions
+        payload['Active'] = 'False'
+
+        # PlatformIds
+        # 5 = Android
+        payload['PlatformId'] = platform_id
+        payload['SmartGroups'] = []
+        payload['Manifest'] = {}
+        payload['Manifest']['Action'] = []
+        payload['Manifest']['Action'].append(action)
+
+        self.debug("Create product: %s" % payload)
+
+        product_name = self.find_product(name)
+
+        if not product_name:
+            self.debug("Product %s does not exist" % name)
+
+            response = self.rest_v1.post('/api/mdm/products/create', payload)
+
+            if self.check_http_response(response):
+                return self.str_to_json(response.text)['Value']
+            else:
+                self.error("Unable to create product %s" % product_name)
+
+        else:
+            self.error("Product %s already exists, unable to create" % product_name)
+            return False
