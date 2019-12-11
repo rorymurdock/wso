@@ -25,6 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
+        python -m pip install pytest pytest-cov coveralls
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -45,7 +46,6 @@ jobs:
         -tenantcode ${{ secrets.UEM_TENANTCODE }}
     - name: Test with pytest
       run: |
-        pip install pytest pytest-cov coveralls
         pytest -v --cov
     - name: Submit Coveralls
       env:
