@@ -42,10 +42,10 @@ class Config():
     def interactive(self):
         """Ask the user for the information and format the config"""
         # Get data from user
-        url = self.auth.ask("AirWatch URL")
-        username = self.auth.ask("AirWatch Username")
-        password = self.auth.ask("AirWatch Password")
-        tenant_code = self.auth.ask("AirWatch Tenantcode")
+        url = self.auth.ask("WSO UEM URL")
+        username = self.auth.ask("WSO UEM Username")
+        password = self.auth.ask("WSO UEM Password")
+        tenant_code = self.auth.ask("WSO UEM Tenant code")
         proxyserver = self.auth.ask("Proxy server (leave blank for none)")
 
         if proxyserver != "":
@@ -77,7 +77,6 @@ class Config():
 
     def arguments(self, args):
         """Using data from the arguments format the config"""
-        self.info("args: %s" % self.filter_locals(locals()))
         url = args.url
         username = args.username
         password = args.password
