@@ -147,7 +147,7 @@ def test_main_arguments_w_proxy():
 
 def test_main_interactive(monkeypatch):
     """Test mocking the std in and writing the config"""
-    url = StringIO('%s\n%s\n%s\n%s\n\n\%s\n' %
+    url = StringIO('%s\n%s\n%s\n%s\n\n%s\n' %
                    (RANDOM_URL, RANDOM_USERNAME, RANDOM_PASSWORD,
                     RANDOM_TENANTCODE, CONFIG_DIR))
 
