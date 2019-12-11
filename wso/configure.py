@@ -9,9 +9,7 @@ LOG_LEVEL = logging.INFO
 class Config():
     """Configure Auth for WSO UEM"""
     def __init__(self, config_dir="config", output="uem.json"):
-        logging.basicConfig(filename='config.log',
-                            filemode='w',
-                            format='%(levelname)s\t%(funcName)s\t%(message)s',
+        logging.basicConfig(format='%(levelname)s\t%(funcName)s\t%(message)s',
                             level=LOG_LEVEL)
 
         # If arguments are used it's passed as None
