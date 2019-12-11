@@ -1,31 +1,33 @@
-# WSO-UEM-Py
+# wso
 
-[![Build Status](https://travis-ci.org/rorymurdock/WSO-UEM-Py.svg?branch=master)](https://travis-ci.org/rorymurdock/WSO-UEM-Py)
-[![Maintainability](https://api.codeclimate.com/v1/badges/3be7fc89238b38fc0031/maintainability)](https://codeclimate.com/github/rorymurdock/WSO-UEM-Py/maintainability)
-[![Documentation Status](https://readthedocs.org/projects/wso-uem-py/badge/?version=latest)](https://wso-uem-py.readthedocs.io/en/latest/?badge=latest)
-[![Coverage Status](https://coveralls.io/repos/github/rorymurdock/WSO-UEM-Py/badge.svg?branch=master)](https://coveralls.io/github/rorymurdock/WSO-UEM-Py?branch=master)
-[![Requirements Status](https://requires.io/github/rorymurdock/WSO-UEM-Py/requirements.svg?branch=master)](https://requires.io/github/rorymurdock/WSO-UEM-Py/requirements/?branch=master)
+[![Build Status](https://github.com/rorymurdock/wso/workflows/Pytest/badge.svg)](https://github.com/rorymurdock/wso/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3be7fc89238b38fc0031/maintainability)](https://codeclimate.com/github/rorymurdock/wso/maintainability)
+[![Documentation Status](https://readthedocs.org/projects/wso/badge/?version=latest)](https://wso.readthedocs.io/en/latest/?badge=latest)
+[![Coverage Status](https://coveralls.io/repos/github/rorymurdock/wso/badge.svg?branch=master)](https://coveralls.io/github/rorymurdock/wso?branch=master)
+[![Requirements Status](https://requires.io/github/rorymurdock/wso/requirements.svg?branch=master)](https://requires.io/github/rorymurdock/wso/requirements/?branch=master)
 
-A Python framework for interacting with WSO UEM
+A package for working with VMWare Workspace ONE UEM
 
-Installation:
+## Purpose
 
-```shell
-python3 -m pip install WSO
-```
+Provides a Python interface for WSO UEM
 
-Usage:
+## Usage
 
-First you'll need to write your credentials:
-
-```shell
-python3 configure_args.py
-```
-
-Next you can test it:
+Getting started is easy, first install the package using `pip install wso` next open an interactive python shell `python3`
 
 ```python
-from WSO.UEM import UEM
+from wso import WSO
+```
 
-print(UEM().system_info())
+```python
+WSO()
+```
+
+This will start interactive config mode where you will be asked for the URL, username, password, tentant code
+
+Once you have setup your config you can query UEM for information. Check the examples directory for some examples of what you can do.
+
+```python
+WSO().system_info()
 ```
