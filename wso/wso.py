@@ -70,12 +70,14 @@ class WSO():
                             debug=debug)
 
     def configure(self):
+        """Interactive setup of config"""
         # Write config if none present
         Config().main(
             Config().get_args()
             )
 
     def info_sensitive(self, message):
+        """Redacts the info if show sensitive is False"""
         if self.show_sensitive:
             return message
         else:
