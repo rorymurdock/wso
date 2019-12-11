@@ -1,10 +1,9 @@
 """Automated testing for WSO"""
-import re
 import json
 import argparse
-import requests
 import random
 import string
+import requests
 import pytest
 from reqrest import REST
 from basic_auth import Auth
@@ -93,7 +92,9 @@ def test_bad_config_folder():
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         WSO('notexistantfolder')
     assert pytest_wrapped_e.type == SystemExit
-    assert pytest_wrapped_e.value.code == 1
+    assert pytest_wrapped_e.value.code == 2
+
+    # TODO Stage and test stdin
 
 
 def test_good_config_folder():
@@ -104,7 +105,6 @@ def test_good_config_folder():
 
 def test_create_headers():
     """Test assembling the header structure"""
-    # TODO: Stage creation of config
     # Test v1
     headers = UEM.create_headers(version=1)
 
@@ -168,9 +168,12 @@ def test_import_noproxy():
 
 
 def test_system_info():
+    """Test system_info API"""
     info = UEM.system_info()
     assert isinstance(info, dict) is True
     assert info['ProductVersion'] == '20.1.0.0'
+
+    # TODO: Add check against API ver
 
 
 def test_expected():
@@ -206,6 +209,7 @@ def test_false_http():
 
 
 def test_str_to_json():
+    """Test converting a str to json"""
     # Test large string
     ninek_str = "x" * 9000
     test_large_json = {}
@@ -228,6 +232,7 @@ def test_str_to_json():
 
 
 def test_querystring():
+    """Test submitting multiple params to querystring"""
 
     # Create some typical parameters requested
     user = random_string
@@ -244,27 +249,28 @@ def test_querystring():
     page = 0
 
     # Filter Q's
-    QS = UEM.querystring(user=user,
-                         model=model,
-                         platform=platform,
-                         lastseen=lastseen,
-                         ownership=ownership,
-                         lgid=lgid,
-                         compliantstatus=compliantstatus,
-                         seensince=seensince,
-                         orderby=orderby,
-                         sortorder=sortorder,
-                         pagesize=pagesize,
-                         page=page)
+    querystring = UEM.querystring(user=user,
+                                  model=model,
+                                  platform=platform,
+                                  lastseen=lastseen,
+                                  ownership=ownership,
+                                  lgid=lgid,
+                                  compliantstatus=compliantstatus,
+                                  seensince=seensince,
+                                  orderby=orderby,
+                                  sortorder=sortorder,
+                                  pagesize=pagesize,
+                                  page=page)
 
     # Check only the vaid params weren't filtered
-    assert len(QS) == 3
-    assert QS["page"] == page
-    assert QS["pagesize"] == pagesize
-    assert QS["user"] == user
+    assert len(querystring) == 3
+    assert querystring["page"] == page
+    assert querystring["pagesize"] == pagesize
+    assert querystring["user"] == user
 
 
 def test_simple_get():
+    """Test simple_get fucntion"""
     filename = 'postman-config.json'
 
     # Create mock
@@ -325,6 +331,8 @@ def test_get_group_name():
 
 
 def test_filter_locals():
+    """Test filtering self out of local vars"""
+
     _local = {}
     _local["path"] = "/api/system/info"
     _local["self"] = "3a863bfd0"
@@ -347,35 +355,40 @@ def test_remaining_api_calls():
 
 
 def test_find_og():
-    og = UEM.find_og(pagesize=1)
-    assert og["OrganizationGroups"][0]["GroupId"] == "pytest"
+    """Test finding an OG"""
+
+    org_group = UEM.find_og(pagesize=1)
+    assert org_group["OrganizationGroups"][0]["GroupId"] == "pytest"
 
     staged = UEM.find_og("Staged", pagesize=1)
     assert staged["OrganizationGroups"][0]["Id"] == 4801
 
 
 def test_get_og():
-    og_id = 4801
+    """Test getting a specific OG"""
+    og_id = ROOT_OG_ID
 
-    og = UEM.get_og(og_id)
+    org_group = UEM.get_og(og_id)
 
-    assert og["GroupId"] == "pytest_stagedOG"
-    assert og["Name"] == "Staged"
+    assert org_group["GroupId"] == ROOT_OG
+    assert org_group["Name"] == ROOT_OG
 
 
 def test_get_all_ogs():
+    """Test getting all of the OGs"""
 
     ogs = UEM.get_all_ogs()
 
     assert ogs["TotalResults"] == 2
 
-    assert ogs["OrganizationGroups"][0]["Name"] == "pytest"
-    assert ogs["OrganizationGroups"][0]["Id"] == 4800
+    assert ogs["OrganizationGroups"][0]["Name"] == ROOT_OG
+    assert ogs["OrganizationGroups"][0]["Id"] == ROOT_OG_ID
     assert ogs["OrganizationGroups"][1]["Name"] == "Staged"
     assert ogs["OrganizationGroups"][1]["Id"] == 4801
 
 
 def test_bulk_limits():
+    """Get the console bulk limits"""
 
     limits = UEM.bulk_limits()
 
@@ -387,6 +400,7 @@ def test_bulk_limits():
 
 
 def test_device_counts():
+    """Test the device counts from the console"""
 
     counts = UEM.device_counts()
 
@@ -410,6 +424,7 @@ def test_get_group():
 
 
 def test_find_group():
+    """Test finding a group"""
     group = UEM.find_group(name=TEST_GROUP_NAME)
 
     assert group["SmartGroups"][0]["SmartGroupID"] == 8686
@@ -417,6 +432,8 @@ def test_find_group():
 
 
 def test_create_product():
+    """Test creating a product"""
+
     # Create a test product
     created_product_id = UEM.create_product(
         'CI Test - %s' % SESSION_ID,
@@ -435,31 +452,33 @@ def test_create_product():
 
 
 def test_find_product():
+    """Test finding a product by name"""
     product = UEM.find_product("CI Test - %s" % SESSION_ID)
 
     assert product["Products"][0]["Name"] == "CI Test - %s" % SESSION_ID
 
 
 def test_get_product():
+    """Test getting a product"""
     product = UEM.get_product(TEST_PRODUCT_ID)
 
     assert product["Name"] == TEST_PRODUCT_NAME
 
 
 def test_get_product_device_state():
+    """Test getting device state for products"""
     # Test bad ID
-    assert UEM.get_product_device_state(0, 'assigned') == False
+    assert UEM.get_product_device_state(0, 'assigned') is False
 
     # Test bad state
-    assert UEM.get_product_device_state(TEST_PRODUCT_ID, 'badassigned') == None
+    assert UEM.get_product_device_state(TEST_PRODUCT_ID, 'badassigned') is None
 
     # Test bad everything
-    assert UEM.get_product_device_state(0, 'badassigned') == None
+    assert UEM.get_product_device_state(0, 'badassigned') is None
 
     # Test inactive product
-    assert UEM.get_product_device_state(TEST_PRODUCT_ID,
-                                        'assigned',
-                                        pagesize=10) == None
+    assert UEM.get_product_device_state(
+        TEST_PRODUCT_ID, 'assigned', pagesize=10) is None
 
     # Test active product
     devices = {}
@@ -482,6 +501,7 @@ def test_get_product_device_state():
 
 
 def test_get_product_assigned_groups():
+    """Test getting assigned groups for products"""
     product_id_no_group = UEM.find_product(
         "CI Test - %s" % SESSION_ID)["Products"][0]["ID"]["Value"]
     # Check product group assignements
@@ -552,11 +572,13 @@ def test_remove_groups_from_products():
 
 
 def test_check_no_group_assignments():
+    """Check product group assignments"""
     assert UEM.check_no_group_assignments(TEST_PRODUCT_ID) is True
     assert UEM.check_no_group_assignments(TEST_ACTIVE_PRODUCT_ID) is False
 
 
 def test_delete_product():
+    """Test deleting a product"""
     created_product_id = UEM.find_product(
         "CI Test - %s" % SESSION_ID)["Products"][0]["ID"]["Value"]
 
@@ -603,9 +625,6 @@ def test_get_device_extensive():
     assert response['Compliant'] is True
     assert response['AssetNumber'] == '433f4189881517307f0431ac622558be'
     assert response['EnrollmentStatus'] == 'Enrolled'
-    assert response['Products'][0]['ProductId'] == 846
-    assert response['Products'][0]['Name'] == 'Product Set 1'
-    assert response['Products'][0]['Status'] == 'Compliant'
     assert response['SmartGroups'][0]['SmartGroupId'] == 1155
     assert response['SmartGroups'][0][
         'SmartGroupUuid'] == '14a44cb1-5b15-e711-80c4-0025b5010089'
@@ -615,7 +634,7 @@ def test_get_device_extensive():
     assert response['CustomAttributes'][0][
         'ApplicationGroup'] == 'com.airwatch.androidagent.identity.xml'
 
-    assert UEM.get_device_extensive() == False
+    assert UEM.get_device_extensive() is False
 
 
 def test_create_group_from_devices():
@@ -627,7 +646,28 @@ def test_create_group_from_devices():
 
     assert UEM.delete_group(group) is True
 
-    # TODO Fix missing coverage
+    assert UEM.delete_group(0) is False
+
+    assert UEM.create_group_from_devices('CI Test - %s' % SESSION_ID + "X",
+                                         []) is False
+
+
+def test_create_group_from_devices_bulk():
+    """Creates a group based on a bulk list of devices, deletes it"""
+
+    bulk_device_list = []
+    bulk_device_list.append(TEST_DEVICE_SERIAL)
+
+    for i in range(100):
+        bulk_device_list.append(i)
+
+    bulk_device_list.append(TEST_DEVICE_SERIAL)
+
+    group = UEM.create_group_from_devices('CI Test - %s' % SESSION_ID,
+                                          bulk_device_list)
+    assert isinstance(group, int)
+
+    assert UEM.delete_group(group) is True
 
     assert UEM.delete_group(0) is False
 
@@ -672,35 +712,38 @@ def test_tag_full():
 
 
 def test_tag_errors():
+    """Test a bad tag action"""
     assert UEM.x_tag('badaction', 999, [0, 0]) is False
 
 
 def test_get_printer():
+    """Test the get printer API"""
     # No printers in environment no chance of getting one
     # Test only that printer doesn't exist
     assert UEM.get_printer(0) is False
 
 
 def test_move_og():
+    """Test moving a device through multiple OGs"""
     change_og_id = UEM.find_og(
         name=OG_TO_MOVE_TO)['OrganizationGroups'][0]['Id']
 
     # Move device to the root OG to start with
-    UEM.move_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
+    UEM.move_og(ROOT_OG_ID, serial_number=TEST_DEVICE_SERIAL)
     assert UEM.get_device(
         serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
 
     # Move device to the Staging OG
-    UEM.move_og(TEST_DEVICE_SERIAL, change_og_id)
+    UEM.move_og(change_og_id, serial_number=TEST_DEVICE_SERIAL)
     assert UEM.get_device(
         serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == OG_TO_MOVE_TO
 
     # Move device back to the root OG to finish up
-    UEM.move_og(TEST_DEVICE_SERIAL, ROOT_OG_ID)
+    UEM.move_og(ROOT_OG_ID, serial_number=TEST_DEVICE_SERIAL)
     assert UEM.get_device(
         serial_number=TEST_DEVICE_SERIAL)['LocationGroupName'] == ROOT_OG
 
-    # TODO
+    # TODO add reprocess coverage
     # def reprocess_product(self, product_id, device_list, force=True):
 
 
