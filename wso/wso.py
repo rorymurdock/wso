@@ -6,25 +6,23 @@ import logging
 
 from basic_auth import Auth
 from reqrest import REST
+from wso.configure import Config
 
 
 class WSO():
     """WSO API facade"""
-
-    # TODO: Change back to default no debug
     def __init__(self,
                  config_dir="config",
                  config_file="uem.json",
-                 debug=True):
+                 debug=False,
+                 bulk_query_trigger=50):
 
         # Sort out logging
         log_level = logging.ERROR
         if debug:
             log_level = logging.INFO
 
-        logging.basicConfig(filename='app.log',
-                            filemode='w',
-                            format='%(levelname)s\t%(funcName)s\t%(message)s',
+        logging.basicConfig(format='%(levelname)s\t%(funcName)s\t%(message)s',
                             level=log_level)
 
         # Create logging functions
@@ -34,17 +32,26 @@ class WSO():
         self.error = logging.error
         self.critical = logging.critical
 
+        # Show sensitve info such as auth headers
+        self.show_sensitive = False
+
         # Set max size line to log
         self.max_log = 9000
 
+        # Set a limit of when to swtich to bulk querys
+        self.bulk_query_trigger = bulk_query_trigger
+
         # Get config
+        self.config_dir = config_dir
         self.config = Auth(config_dir).read_config(config_file)
 
         if not self.config:
             self.critical("Unable to get config, run configure.py")
+            self.configure()
+            self.critical("Run again to use config")
             sys.exit(1)
 
-        self.info("Imported config - %s" % self.config)
+        self.info("Imported config - %s" % self.info_sensitive(self.config))
 
         # Create v1 API object
         headers_v1 = self.create_headers(version=1)
@@ -62,6 +69,18 @@ class WSO():
                             proxy=self.import_proxy(),
                             debug=debug)
 
+    def configure(self):
+        # Write config if none present
+        Config().main(
+            Config().get_args()
+            )
+
+    def info_sensitive(self, message):
+        if self.show_sensitive:
+            return message
+        else:
+            return "Redacted for security"
+
     def create_headers(self, version=2):
         """Creates headers for REST API Call using config and version"""
         headers = {
@@ -71,7 +90,7 @@ class WSO():
             'Content-Type': "application/json"
         }
 
-        self.info("Generated v%i headers - %s" % (version, headers))
+        self.info("Generated v%i headers - %s" % (version, self.info_sensitive(headers)))
 
         return headers
 
@@ -518,8 +537,6 @@ class WSO():
         # Set base URL
         url = '/api/mdm/devices'
 
-        # TODO: Validate all parameters
-
         # Map ids against the WSO format
         ids = {}
         ids["DeviceId"] = device_id
@@ -538,7 +555,6 @@ class WSO():
 
         if _id is None:
             self.error("No device search parameters speficied")
-            print("No device search parameters speficied")
             return False
 
         self.info("Searching by %s for %s" % (_id, ids[_id]))
@@ -567,8 +583,6 @@ class WSO():
 
         # Set base URL
         url = '/api/mdm/devices/search'
-
-        # TODO: Validate all parameters
 
         querystring = self.querystring(user=user,
                                        model=model,
@@ -651,7 +665,6 @@ class WSO():
 
         if _id is None:
             self.error("No device search parameters speficied")
-            print("No device search parameters speficied")
             return False
 
         self.info("Searching by %s for %s" % (_id, ids[_id]))
@@ -840,20 +853,54 @@ class WSO():
         payload['CriteriaType'] = 'UserDevice'
         payload['DeviceAdditions'] = []
 
-        # TODO Add check for size and revert to get all device list
-        # TODO Add duplicate device check
-        for serial in serial_list:
-            device_response = self.get_device(serial_number=serial)
-            if device_response is not False:
-                self.info('Device %s is valid' % serial)
-            elif device_response is False:
-                self.warning('Device %s doesn\'t exist' % serial)
-                continue
+        # Remove duplicates in list
+        serial_list = list(set(serial_list))
 
-            device = {}
-            device['Id'] = device_response['Id']['Value']
-            device['Name'] = device_response['DeviceFriendlyName']
-            payload['DeviceAdditions'].append(device)
+        # Check if list is large enough for bulk limits
+        if len(serial_list) > self.bulk_query_trigger:
+            # Bulk query mode
+            self.debug("Device list %s qualifies for bulk query" %
+                       len(serial_list))
+            self.debug("Getting all devices")
+
+            devices = self.get_all_devices(pagesize=999999)
+
+            # Generate two lists
+            # One for serials
+            # and one with serial as key for device ID
+            self.info("Generating bulk serial list")
+            console_serials = []
+            console_ids = {}
+            for device in devices["Devices"]:
+                console_serials.append(device["SerialNumber"])
+                console_ids[device["SerialNumber"]] = device["Id"]["Value"]
+
+            # Check through the submitted device list
+            for serial in serial_list:
+                if str(serial) in console_serials:
+                    self.info('Device %s is valid' % serial)
+                else:
+                    self.warning('Device %s doesn\'t exist' % serial)
+                    continue
+
+                device = {}
+                device['Id'] = console_ids[str(serial)]
+                payload['DeviceAdditions'].append(device)
+
+        else:
+            # Small mode, query each device individually
+            for serial in serial_list:
+                device_response = self.get_device(serial_number=serial)
+                if device_response is not False:
+                    self.info('Device %s is valid' % serial)
+                elif device_response is False:
+                    self.warning('Device %s doesn\'t exist' % serial)
+                    continue
+
+                device = {}
+                device['Id'] = device_response['Id']['Value']
+                device['Name'] = device_response['DeviceFriendlyName']
+                payload['DeviceAdditions'].append(device)
 
         if payload['DeviceAdditions'] == []:
             self.error('No devices added to group %s' % group_name)
@@ -863,12 +910,16 @@ class WSO():
 
     def format_group_payload_ogs(self, group_name, og_list):
         """Take a list of OGs and format it for a group POST req"""
+        # TODO add bulk limit
         self.info("args: %s" % self.filter_locals(locals()))
 
         payload = {}
         payload['Name'] = group_name
         payload['CriteriaType'] = 'All'
         payload['OrganizationGroups'] = []
+
+        # Remove duplicates in list
+        og_list = list(set(og_list))
 
         for org_group in og_list:
             og_response = self.find_og(name=org_group)
@@ -911,23 +962,25 @@ class WSO():
                 self.error("Unable to delete %s" % group_name)
         return False
 
-    def get_all_tags(self, org_group=None, pagesize=500, page=1):
+    def get_all_tags(self, org_group=None, pagesize=500, page=0):
+        """Get all tags"""
         return self.find_tag(name=None,
-                             org_group=org_group)  #, pagesize=size, page=page)
+                             org_group=org_group,
+                             pagesize=pagesize,
+                             page=page)
 
-    def find_tag(self, name=None, org_group=None):
+    def find_tag(self, name=None, org_group=None, pagesize=500, page=0):
         """Gets tags, supports all or searching, returns json"""
-        # TODO add pagesize
         self.info("args: %s" % self.filter_locals(locals()))
-
-        querystring = {}
 
         if org_group is None:
             # Set the product to be at the highest OG
-            querystring['OrganizationGroupId'] = self.find_og(
-                pagesize=1)['OrganizationGroups'][0]['Id']
-        if name is not None:
-            querystring['name'] = name
+            org_group = self.find_og(pagesize=1)['OrganizationGroups'][0]['Id']
+
+        querystring = self.querystring(name=name,
+                                       OrganizationGroupId=org_group,
+                                       pagesize=pagesize,
+                                       page=page)
 
         response = self.rest_v1.get("/api/mdm/tags/search", querystring)
 
@@ -979,7 +1032,7 @@ class WSO():
         """Create a tag"""
         self.info("args: %s" % self.filter_locals(locals()))
 
-        existing_tag = self.find_tag(tagname)
+        existing_tag = self.find_tag(name=tagname)
         if existing_tag:
             self.warning('Tag already exists: %s' %
                          existing_tag[0]['Id']['Value'])
@@ -1016,14 +1069,35 @@ class WSO():
 
         return self.simple_get('/api/mdm/peripherals/printer/%i' % printerid)
 
-    def move_og(self, device_id, og_id: int, search_by='Serialnumber'):
+    def move_og(self,
+                og_id: int,
+                macaddress=None,
+                udid=None,
+                serial_number=None,
+                imei=None):
         """Move device in another OG"""
-        # TODO: Add more searchbys
         self.info("args: %s" % self.filter_locals(locals()))
 
-        querystring = self.querystring(id=device_id,
-                                       ogid=og_id,
-                                       searchby=search_by)
+        # Map ids against the WSO format
+        ids = {}
+        ids["Macaddress"] = macaddress
+        ids["Udid"] = udid
+        ids["Serialnumber"] = serial_number
+        ids["ImeiNumber"] = imei
+
+        _id = None
+
+        for _query in ids:
+            if ids[_query] is not None:
+                _id = _query
+                break
+
+        if _id is None:
+            self.error("No device search parameters speficied")
+            return False
+
+        self.info("Searching by %s for %s" % (_id, ids[_id]))
+        querystring = self.querystring(searchBy=_id, id=ids[_id], ogid=og_id)
 
         response = self.rest_v1.post(
             '/api/mdm/devices/commands/changeorganizationgroup',
