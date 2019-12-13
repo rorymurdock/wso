@@ -497,7 +497,7 @@ def test_get_product_device_state():
 
     assert UEM.get_product_device_state(TEST_ASSIGNED_PRODUCT,
                                         'assigned',
-                                        pagesize=10) == devices["Devices"]
+                                        pagesize=10) == devices
 
 
 def test_get_product_assigned_groups():

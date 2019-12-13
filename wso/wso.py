@@ -403,7 +403,7 @@ class WSO():
         # Add arguments
         querystring = self.querystring(pagesize=pagesize, page=page)
 
-        return self.simple_get(url, querystring, 1)
+        return self.simple_get(url, querystring, 2)
 
     def get_product_assigned_groups(self, product_id: int):
         """Gets all assigned groups for a product id, uses get_product()"""
