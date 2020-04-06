@@ -1,0 +1,1164 @@
+{
+   "platforms": [
+      {
+         "platform": "Android",
+         "device_os": "Android 2.2",
+         "os_id": 8
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.2.1",
+         "os_id": 35
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.2.2",
+         "os_id": 36
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3",
+         "os_id": 37
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3.3",
+         "os_id": 38
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3.4",
+         "os_id": 39
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3.5",
+         "os_id": 40
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3.6",
+         "os_id": 61
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3.7",
+         "os_id": 126
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.2.3",
+         "os_id": 127
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 2.3.1",
+         "os_id": 129
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.0",
+         "os_id": 21
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.0.1",
+         "os_id": 22
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.2",
+         "os_id": 30
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.1",
+         "os_id": 33
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.2.1",
+         "os_id": 124
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.2.6",
+         "os_id": 125
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 3.2.2",
+         "os_id": 128
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.0.1",
+         "os_id": 51
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.0.2",
+         "os_id": 52
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.0.3",
+         "os_id": 53
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.0.4",
+         "os_id": 54
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.1.0",
+         "os_id": 77
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.1.1",
+         "os_id": 78
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.2.0",
+         "os_id": 85
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.2.1",
+         "os_id": 86
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.1.2",
+         "os_id": 92
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.2.2",
+         "os_id": 98
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.3.0",
+         "os_id": 149
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.4.0",
+         "os_id": 157
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.4.1",
+         "os_id": 162
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.4.2",
+         "os_id": 163
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.4.3",
+         "os_id": 171
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 4.4.4",
+         "os_id": 174
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 5.0.0",
+         "os_id": 188
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 5.0.1",
+         "os_id": 202
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 5.0.2",
+         "os_id": 203
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 5.1.0",
+         "os_id": 206
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 5.1.1",
+         "os_id": 220
+      },
+      {
+         "platform": "Android",
+         "device_os": "Android 6.0.0",
+         "os_id": 236
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 3.0",
+         "os_id": 1
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 3.1",
+         "os_id": 2
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.0",
+         "os_id": 3
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.0.1",
+         "os_id": 4
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.0.2",
+         "os_id": 5
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.1",
+         "os_id": 6
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2",
+         "os_id": 7
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.1",
+         "os_id": 17
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.6",
+         "os_id": 18
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.3",
+         "os_id": 19
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.3.1",
+         "os_id": 20
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.7",
+         "os_id": 23
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.3.2",
+         "os_id": 24
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.8",
+         "os_id": 26
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.3.3",
+         "os_id": 27
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.9",
+         "os_id": 28
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.3.4",
+         "os_id": 29
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.10",
+         "os_id": 31
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.3.5",
+         "os_id": 32
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 4.2.5",
+         "os_id": 122
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 5.0.0",
+         "os_id": 34
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 5.0.1",
+         "os_id": 43
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 5.1.0",
+         "os_id": 60
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 5.1.1",
+         "os_id": 65
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.0.0",
+         "os_id": 66
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.0.1",
+         "os_id": 81
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.0.2",
+         "os_id": 87
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.0",
+         "os_id": 89
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.1",
+         "os_id": 93
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.2",
+         "os_id": 94
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.3",
+         "os_id": 95
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.4",
+         "os_id": 141
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.5",
+         "os_id": 158
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 6.1.6",
+         "os_id": 167
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.0",
+         "os_id": 142
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.1",
+         "os_id": 145
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.2",
+         "os_id": 147
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.3",
+         "os_id": 151
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.4",
+         "os_id": 159
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.1.0",
+         "os_id": 160
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.5",
+         "os_id": 164
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.0.6",
+         "os_id": 166
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.1.1",
+         "os_id": 168
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 7.1.2",
+         "os_id": 173
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.0.0",
+         "os_id": 181
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.0.1",
+         "os_id": 184
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.0.2",
+         "os_id": 185
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.1.0",
+         "os_id": 187
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.1.1",
+         "os_id": 189
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.1.2",
+         "os_id": 200
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.1.3",
+         "os_id": 204
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.2.0",
+         "os_id": 207
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.3.0",
+         "os_id": 208
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.4.0",
+         "os_id": 221
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 8.4.1",
+         "os_id": 226
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 9.0.0",
+         "os_id": 224
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 9.1.0",
+         "os_id": 233
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 9.0.1",
+         "os_id": 235
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 9.0.2",
+         "os_id": 237
+      },
+      {
+         "platform": "Apple",
+         "device_os": "iOS 9.2.0",
+         "os_id": 241
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Lion 10.7.2",
+         "os_id": 62
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Lion 10.7.0",
+         "os_id": 67
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Lion 10.7.1",
+         "os_id": 68
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Lion 10.7.3",
+         "os_id": 69
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Lion 10.7.4",
+         "os_id": 70
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mountain Lion 10.8.0",
+         "os_id": 71
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mountain Lion 10.8.1",
+         "os_id": 79
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Lion 10.7.5",
+         "os_id": 83
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mountain Lion 10.8.2",
+         "os_id": 91
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mountain Lion 10.8.3",
+         "os_id": 140
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mountain Lion 10.8.4",
+         "os_id": 143
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mountain Lion 10.8.5",
+         "os_id": 144
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mavericks 10.9.0",
+         "os_id": 150
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mavericks 10.9.1",
+         "os_id": 161
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mavericks 10.9.2",
+         "os_id": 165
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mavericks 10.9.3",
+         "os_id": 169
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mavericks 10.9.4",
+         "os_id": 172
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Mavericks 10.9.5",
+         "os_id": 182
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Yosemite 10.10",
+         "os_id": 186
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Yosemite 10.10.1",
+         "os_id": 190
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Yosemite 10.10.2",
+         "os_id": 205
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Yosemite 10.10.3",
+         "os_id": 213
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Yosemite 10.10.4",
+         "os_id": 222
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X Yosemite 10.10.5",
+         "os_id": 227
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X El Capitan 10.11.0",
+         "os_id": 234
+      },
+      {
+         "platform": "AppleOsX",
+         "device_os": "OS X El Capitan 10.11.1",
+         "os_id": 239
+      },
+      {
+         "platform": "AppleTv",
+         "device_os": "Apple TV 6.0.0",
+         "os_id": 176
+      },
+      {
+         "platform": "AppleTv",
+         "device_os": "Apple TV 6.0.1",
+         "os_id": 177
+      },
+      {
+         "platform": "AppleTv",
+         "device_os": "Apple TV 6.0.2",
+         "os_id": 178
+      },
+      {
+         "platform": "AppleTv",
+         "device_os": "Apple TV 6.1.0",
+         "os_id": 179
+      },
+      {
+         "platform": "AppleTv",
+         "device_os": "Apple TV 6.1.1",
+         "os_id": 180
+      },
+      {
+         "platform": "AppleTv",
+         "device_os": "Apple TV 7.0.2",
+         "os_id": 148
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 4.5",
+         "os_id": 45
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 4.6",
+         "os_id": 46
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 4.7",
+         "os_id": 47
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 5.0",
+         "os_id": 48
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 6.0",
+         "os_id": 9
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 7.0",
+         "os_id": 49
+      },
+      {
+         "platform": "BlackBerry",
+         "device_os": "BlackBerry 7.1",
+         "os_id": 50
+      },
+      {
+         "platform": "BlackBerry10",
+         "device_os": "BlackBerry10 10.0.9",
+         "os_id": 96
+      },
+      {
+         "platform": "BlackBerry10",
+         "device_os": "BlackBerry10 10.0.10",
+         "os_id": 97
+      },
+      {
+         "platform": "BlackBerry10",
+         "device_os": "BlackBerry10 10.1.0",
+         "os_id": 123
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 39",
+         "os_id": 201
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 40",
+         "os_id": 211
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 41",
+         "os_id": 212
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 42",
+         "os_id": 215
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 43",
+         "os_id": 219
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 44",
+         "os_id": 231
+      },
+      {
+         "platform": "ChromeBook",
+         "device_os": "Chrome OS 45",
+         "os_id": 232
+      },
+      {
+         "platform": "Qnx",
+         "device_os": "QNX 6.5.0",
+         "os_id": 175
+      },
+      {
+         "platform": "Symbian",
+         "device_os": "Symbian OS 3.2",
+         "os_id": 41
+      },
+      {
+         "platform": "Symbian",
+         "device_os": "Symbian OS 3.1",
+         "os_id": 76
+      },
+      {
+         "platform": "Symbian",
+         "device_os": "Symbian OS 5.2",
+         "os_id": 25
+      },
+      {
+         "platform": "Symbian",
+         "device_os": "Symbian OS 5.0",
+         "os_id": 42
+      },
+      {
+         "platform": "Symbian",
+         "device_os": "Symbian OS 5.3",
+         "os_id": 74
+      },
+      {
+         "platform": "Symbian",
+         "device_os": "Symbian OS 5.4",
+         "os_id": 75
+      },
+      {
+         "platform": "Tizen",
+         "device_os": "Tizen 2.3.0",
+         "os_id": 216
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 5 5.1.0",
+         "os_id": 84
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.23121",
+         "os_id": 100
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.20963",
+         "os_id": 101
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21840",
+         "os_id": 102
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.23145",
+         "os_id": 103
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.23103",
+         "os_id": 104
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.20269",
+         "os_id": 105
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.20961",
+         "os_id": 106
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.23137",
+         "os_id": 107
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.29044",
+         "os_id": 108
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21913",
+         "os_id": 109
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.19600",
+         "os_id": 110
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21051",
+         "os_id": 111
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21009",
+         "os_id": 112
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21869",
+         "os_id": 113
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21889",
+         "os_id": 114
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.23152",
+         "os_id": 115
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.20774",
+         "os_id": 116
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21916",
+         "os_id": 117
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.23127",
+         "os_id": 118
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.29058",
+         "os_id": 119
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.21864",
+         "os_id": 120
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 6 5.2.29040",
+         "os_id": 121
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "WindowsMobile 5.1",
+         "os_id": 135
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows Mobile 5.0",
+         "os_id": 138
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows CE 5.0",
+         "os_id": 139
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows CE 6.0",
+         "os_id": 136
+      },
+      {
+         "platform": "WindowsMobile",
+         "device_os": "Windows CE 7.0",
+         "os_id": 137
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "WindowsXP 5.1.0",
+         "os_id": 55
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "Windows XP 64-Bit",
+         "os_id": 56
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "WindowsVista 6.0.0",
+         "os_id": 57
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "Windows 7 6.1.0",
+         "os_id": 58
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "Windows 8",
+         "os_id": 59
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "Windows 8.1",
+         "os_id": 228
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "Windows 8.1 w/Update 1",
+         "os_id": 229
+      },
+      {
+         "platform": "WindowsPc",
+         "device_os": "Windows 10",
+         "os_id": 230
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.0.0",
+         "os_id": 44
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.7720",
+         "os_id": 63
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.8107",
+         "os_id": 64
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.8773",
+         "os_id": 72
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.8112",
+         "os_id": 73
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.0.7004",
+         "os_id": 130
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.0.7392",
+         "os_id": 131
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.0.7389",
+         "os_id": 132
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.7740",
+         "os_id": 133
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.7712",
+         "os_id": 134
+      },
+      {
+         "platform": "WindowsPhone",
+         "device_os": "Windows Phone 7.10.8862",
+         "os_id": 154
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.9900",
+         "os_id": 80
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.9903",
+         "os_id": 82
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.10211",
+         "os_id": 90
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.10327",
+         "os_id": 152
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.10328",
+         "os_id": 153
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.10501",
+         "os_id": 155
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.0.10512",
+         "os_id": 156
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.12359",
+         "os_id": 170
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.12397",
+         "os_id": 183
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.12382",
+         "os_id": 191
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.12393",
+         "os_id": 192
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.12400",
+         "os_id" :193
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14141",
+         "os_id" :194
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14147",
+         "os_id" :195
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14157",
+         "os_id" :196
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14176",
+         "os_id" :197
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14192",
+         "os_id" :198
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14203",
+         "os_id" :199
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.14219",
+         "os_id" :214
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.15143",
+         "os_id" :217
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.15145",
+         "os_id" :218
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 8.10.15148",
+         "os_id" :225
+      },
+      {
+         "platform": "WindowsPhone8",
+         "device_os": "Windows Phone 10.0.10575",
+         "os_id" :240
+      },
+      {
+         "platform": "WinRT",
+         "device_os": "Windows 8.0 (6.2.9200)",
+         "os_id" :88
+      },
+      {
+         "platform": "WinRT",
+         "device_os": "Windows 8.1 (6.3.9431)",
+         "os_id" :146
+      },
+      {
+         "platform": "WinRT",
+         "device_os": "Windows 8.1 (6.3.9600)",
+         "os_id" :238
+      },
+      {
+         "platform": "WinRT",
+         "device_os": "Windows 10 (10.0.10240)",
+         "os_id" :223
+      },
+      {
+         "platform": "WinRT",
+         "device_os": "Windows 10",
+         "os_id" :223
+      }
+   ]
+}

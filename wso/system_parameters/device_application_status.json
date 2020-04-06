@@ -1,0 +1,25 @@
+{
+    "device_application_status":
+    [
+        {
+            "id": 1,
+            "status": "Pending Install"
+        },
+        {
+            "id": 2,
+            "status": "Installed"
+        },
+        {
+            "id": 3,
+            "status": "Pending Removal"
+        },
+        {
+            "id": 4,
+            "status": "Removed"
+        },
+        {
+            "id": 5,
+            "status": "Unknown"
+        }
+    ]
+}

@@ -1,0 +1,77 @@
+{
+    "platforms":
+    [
+        {
+            "platform_id": 1,
+            "platform_name": "WindowsMobile"
+         },
+         {
+            "platform_id": 2,
+            "platform_name": "Apple"
+         },
+         {
+            "platform_id": 3,
+            "platform_name": "BlackBerry"
+         },
+         {
+            "platform_id": 4,
+            "platform_name": "Symbian"
+         },
+         {
+            "platform_id": 5,
+            "platform_name": "Android"
+         },
+         {
+            "platform_id": 8,
+            "platform_name": "WindowsPhone"
+         },
+         {
+            "platform_id": 9,
+            "platform_name": "WindowsPc"
+         },
+         {
+            "platform_id": 10,
+            "platform_name": "AppleOsX"
+         },
+         {
+            "platform_id": 11,
+            "platform_name": "WindowsPhone8"
+         },
+         {
+            "platform_id": 12,
+            "platform_name": "WinRT"
+         },
+         {
+            "platform_id": 13,
+            "platform_name": "BlackBerry10"
+         },
+         {
+            "platform_id": 14,
+            "platform_name": "Apple TV"
+         },
+         {
+            "platform_id": 16,
+            "platform_name": "ChromeBook"
+         },
+         {
+            "platform_id": 17,
+            "platform_name": "Tizen"
+         },
+         {
+            "platform_id": 101,
+            "platform_name": "ZebraPrinter"
+         },
+         {
+            "platform_id": 102,
+            "platform_name": "ToshibaPrinter"
+         },
+         {
+            "platform_id": 103,
+            "platform_name": "AveryDennisonPrinter"
+         },
+         {
+            "platform_id": 104,
+            "platform_name": "DataMaxONeilPrinter"
+         }
+    ]
+}
