@@ -6,10 +6,9 @@ UTILS = Utils()
 
 def test_timezone():
     """Tests verifying timezone"""
-    assert UTILS.check_timezone("AEST") is True
-    assert UTILS.check_timezone("SAST") is True
+    assert UTILS.check_timezone(57) is True
+    assert UTILS.check_timezone(9999) is False
     assert UTILS.check_timezone("BAD") is False
-    assert UTILS.check_timezone(123) is False
     assert UTILS.check_timezone("") is False
 
 
