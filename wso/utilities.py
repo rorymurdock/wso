@@ -34,9 +34,13 @@ class Utils:
         return False
 
     # TODO Complete funcitons
+    def check_countries(self, country):
+        """Check if a country is valid"""
+        pass
+
     def check_timezone(self, timezone):
         """Check if a timezone code is valid"""
-        return self.check_key("code", timezone, 'timezones')
+        return self.check_key("id", timezone, 'timezones')
 
     def check_locale(self, lang):
         """Check if a locale code is valid"""
