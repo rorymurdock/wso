@@ -1271,11 +1271,62 @@ class WSO():
                        product_name)
             return False
 
-    def change_user(self):
-        pass
-    # TODO Add functionality
-        # PATCH /devices/{id}/enrollmentuser/{enrollmentuserid}
 
+    def get_user(self, firstname=None,
+                lastname=None,
+                email=None,
+                locationgroupId=None,
+                role=None,
+                username=None,
+                status=None,
+                pagesize=500,
+                page=0):
+        """Search for a user"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        if status:
+            if status not in ("Active", "Inactive"):
+                self.error("Invalid user status parameter")
+                return False
+
+        # Set base URL
+        url = '/api/system/users/search'
+
+        # Map ids against the WSO format
+        ids = {}
+        ids["firstname"] = firstname
+        ids["lastname"] = lastname
+        ids["email"] = email
+        ids["locationgroupId"] = locationgroupId
+        ids["role"] = role
+        ids["username"] = username
+        ids["status"] = status
+
+        _id = None
+
+        for _query in ids:
+            if ids[_query] is not None:
+                _id = _query
+                break
+
+        if _id is None:
+            self.error("No User search parameters speficied")
+            return False
+
+        self.info("Searching by %s for %s" % (_id, ids[_id]))
+        querystring = self.querystring(searchBy=_id,
+                                       id=ids[_id],
+                                       pagesize=pagesize,
+                                       page=page)
+
+        return self.simple_get(url, querystring, 1)
+
+
+    def change_user(self, device_id=int, user_id=int):
+        """Change the enrolment user for a device"""
+        response = self.rest_v2.patch('/api/mdm/devices/%s/enrollmentuser/%s' % (device_id, user_id), "")
+
+        return self.check_http_response(response)
 
     # def bulk_command(self, command: str, macadress=None, udid=None, serial_number=None, imei_number=None):
     #     if command in ["EnterpriseWipe", "LockDevice", "ScheduleOsUpdate", "SoftReset", "Shutdown"]:
