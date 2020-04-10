@@ -19,12 +19,13 @@ class Utils:
 
     def __init__(self):
         for file in CONFIG_FILES:
-            if not Auth(config_dir="wso/system_parameters").check_file_exists(CONFIG_FILES[file]):
+            if not Auth(config_dir="wso/system_parameters").check_file_exists(
+                    CONFIG_FILES[file]):
                 sys.exit("Unable to load file %s" % file)
 
     def check_key(self, t_key, value, file):
         """A varible function to check the keys of a json for a value"""
-        with open("wso/system_parameters/"+CONFIG_FILES[file]) as json_file:
+        with open("wso/system_parameters/" + CONFIG_FILES[file]) as json_file:
             keys = json.load(json_file)
 
         for key in keys:

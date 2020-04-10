@@ -60,7 +60,8 @@ class WSO():
         self.rest_v1 = REST(url=self.config['url'],
                             headers=headers_v1,
                             proxy=self.import_proxy(),
-                            debug=debug, timeout=9999)
+                            debug=debug,
+                            timeout=9999)
 
         # Create v2 API object
         headers_v2 = self.create_headers(version=2)
@@ -68,16 +69,15 @@ class WSO():
         self.rest_v2 = REST(url=self.config['url'],
                             headers=headers_v2,
                             proxy=self.import_proxy(),
-                            debug=debug, timeout=9999)
+                            debug=debug,
+                            timeout=9999)
 
         self.utils = Utils()
 
     def configure(self):
         """Interactive setup of config"""
         # Write config if none present
-        Config().main(
-            Config().get_args()
-            )
+        Config().main(Config().get_args())
 
     def info_sensitive(self, message):
         """Redacts the info if show sensitive is False"""
@@ -95,7 +95,8 @@ class WSO():
             'Content-Type': "application/json"
         }
 
-        self.info("Generated v%i headers - %s" % (version, self.info_sensitive(headers)))
+        self.info("Generated v%i headers - %s" %
+                  (version, self.info_sensitive(headers)))
 
         return headers
 
@@ -1112,7 +1113,16 @@ class WSO():
 
         return self.check_http_response(response)
 
-    def format_og_payload(self, name: str, group_id: str, location_group_type, country=None, locale=None, default_location=None, devices=None, timezone=None, enable_api=None):
+    def format_og_payload(self,
+                          name: str,
+                          group_id: str,
+                          location_group_type,
+                          country=None,
+                          locale=None,
+                          default_location=None,
+                          devices=None,
+                          timezone=None,
+                          enable_api=None):
         """Create the payload for a new OG"""
 
         payload = {}
@@ -1121,7 +1131,9 @@ class WSO():
         # TODO refactor the checking for blank vars
         # TODO Check timezone ID
 
-        location_group_types = ["Container", "Division", "Prospect", "Region", "UserDefined"]
+        location_group_types = [
+            "Container", "Division", "Prospect", "Region", "UserDefined"
+        ]
         if location_group_type in location_group_types:
             payload["LocationGroupType"] = location_group_type
 
@@ -1152,14 +1164,20 @@ class WSO():
 
         return payload
 
-    def create_og(self, parentog_id: int, payload=dict, strict_name=True, strict_group_id=True):
+    def create_og(self,
+                  parentog_id: int,
+                  payload=dict,
+                  strict_name=True,
+                  strict_group_id=True):
         """Create OG using payload"""
         # Note that the name does not need to be unique for the API
         # Group ID has to be unique but there is no way to search by group ID
         # except to load all OGs and seach through all OGS
         # to increase performance you can disable this
-        if strict_name and self.find_og(name=payload["Name"])["OrganizationGroups"]:
-            self.error("OG %s already exists, unable to create" % payload["Name"])
+        if strict_name and self.find_og(
+                name=payload["Name"])["OrganizationGroups"]:
+            self.error("OG %s already exists, unable to create" %
+                       payload["Name"])
             return False
 
         if strict_group_id:
@@ -1167,10 +1185,13 @@ class WSO():
                 ogs = self.get_all_ogs(pagesize=99999)['OrganizationGroups']
                 for og in ogs:
                     if payload["GroupId"] == og['GroupId']:
-                        self.error("OG with groupId %s already exists, unable to create" % payload["Name"])
+                        self.error(
+                            "OG with groupId %s already exists, unable to create"
+                            % payload["Name"])
                         return False
 
-        response = self.rest_v2.post("/api/system/groups/%i" % parentog_id, payload=payload)
+        response = self.rest_v2.post("/api/system/groups/%i" % parentog_id,
+                                     payload=payload)
 
         if self.check_http_response(response):
             return self.str_to_json(response.text)
@@ -1271,16 +1292,16 @@ class WSO():
                        product_name)
             return False
 
-
-    def get_user(self, firstname=None,
-                lastname=None,
-                email=None,
-                locationgroupId=None,
-                role=None,
-                username=None,
-                status=None,
-                pagesize=500,
-                page=0):
+    def get_user(self,
+                 firstname=None,
+                 lastname=None,
+                 email=None,
+                 locationgroupId=None,
+                 role=None,
+                 username=None,
+                 status=None,
+                 pagesize=500,
+                 page=0):
         """Search for a user"""
         self.info("args: %s" % self.filter_locals(locals()))
 
@@ -1321,10 +1342,10 @@ class WSO():
 
         return self.simple_get(url, querystring, 1)
 
-
     def change_user(self, device_id=int, user_id=int):
         """Change the enrolment user for a device"""
-        response = self.rest_v2.patch('/api/mdm/devices/%s/enrollmentuser/%s' % (device_id, user_id), "")
+        response = self.rest_v2.patch(
+            '/api/mdm/devices/%s/enrollmentuser/%s' % (device_id, user_id), "")
 
         return self.check_http_response(response)
 

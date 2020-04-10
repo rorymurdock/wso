@@ -178,7 +178,8 @@ def test_system_info():
     version = json.loads(version.text)
 
     # Extract the version code
-    version = re.search(r'(\d{1,2}.\d{1,2}.\d{1,2}.\d{1,2})', version["apis"][0]['products'][0]).group(1)
+    version = re.search(r'(\d{1,2}.\d{1,2}.\d{1,2}.\d{1,2})',
+                        version["apis"][0]['products'][0]).group(1)
 
     assert info['ProductVersion'] == version
 
@@ -500,7 +501,7 @@ def test_get_product_device_state():
     devices['Devices'].append(device)
     devices['Page'] = 0
     devices['PageSize'] = 10
-    devices['Total'] = 0 # Bug, returns 0: WSO ticket #20115390404
+    devices['Total'] = 0  # Bug, returns 0: WSO ticket #20115390404
 
     assert UEM.get_product_device_state(TEST_ASSIGNED_PRODUCT,
                                         'assigned',
@@ -764,11 +765,24 @@ def test_format_new_og():
     example_payload['Timezone'] = 57
 
     # Test the function
-    payload = UEM.format_og_payload(SESSION_ID, SESSION_ID, "Container", "Australia", "en-AU", timezone=57)
+    payload = UEM.format_og_payload(SESSION_ID,
+                                    SESSION_ID,
+                                    "Container",
+                                    "Australia",
+                                    "en-AU",
+                                    timezone=57)
 
     assert payload == example_payload
 
-    payload = UEM.format_og_payload(SESSION_ID, SESSION_ID, "Container", "Australia", "en-AU", default_location="Test", devices=999, timezone=57, enable_api=True)
+    payload = UEM.format_og_payload(SESSION_ID,
+                                    SESSION_ID,
+                                    "Container",
+                                    "Australia",
+                                    "en-AU",
+                                    default_location="Test",
+                                    devices=999,
+                                    timezone=57,
+                                    enable_api=True)
 
     example_payload['AddDefaultLocation'] = "Test"
     example_payload['Devices'] = 999
@@ -777,18 +791,26 @@ def test_format_new_og():
 
     assert payload == example_payload
 
+
 def test_create_og():
     """Test creating an OG"""
 
     # Create the payload
-    payload = UEM.format_og_payload("CI Test - %s" % SESSION_ID, SESSION_ID, "Container", country="Australia", locale="en-AU", timezone=57)
+    payload = UEM.format_og_payload("CI Test - %s" % SESSION_ID,
+                                    SESSION_ID,
+                                    "Container",
+                                    country="Australia",
+                                    locale="en-AU",
+                                    timezone=57)
 
     # Create the payload
     response = UEM.create_og(ROOT_OG_ID, payload)
 
     assert isinstance(response['Id'], int)
 
-    assert len(UEM.find_og(name="CI Test - %s" % SESSION_ID)['OrganizationGroups']) == 1
+    assert len(
+        UEM.find_og(name="CI Test - %s" %
+                    SESSION_ID)['OrganizationGroups']) == 1
 
     # Test duplicate name fail
     assert UEM.create_og(ROOT_OG_ID, payload) is False
@@ -802,25 +824,26 @@ def test_create_og():
     # assert UEM.create_og(ROOT_OG_ID, "") is False
 
 
-
-
 def test_delete_og():
     """Test deleting OG created during this session"""
 
     # Find the created OG
-    og_uuid = UEM.find_og(name="CI Test - %s" % SESSION_ID)['OrganizationGroups'][0]['Uuid']
+    og_uuid = UEM.find_og(name="CI Test - %s" %
+                          SESSION_ID)['OrganizationGroups'][0]['Uuid']
 
     # Delete the OG
     assert UEM.delete_og(og_uuid) is True
 
     # Make sure it was deleted
-    assert UEM.find_og(name="CI Test - %s" % SESSION_ID)['OrganizationGroups'] == []
+    assert UEM.find_og(name="CI Test - %s" %
+                       SESSION_ID)['OrganizationGroups'] == []
+
 
 # TODO add reprocess coverage
 # def reprocess_product(self, product_id, device_list, force=True):
 
 
-def test_tidy_up(): # pragma: no cover
+def test_tidy_up():  # pragma: no cover
     """Delete any leftover artifacts from tests"""
 
     print("\nGroups")
@@ -856,4 +879,4 @@ def test_tidy_up(): # pragma: no cover
             if UEM.delete_og(og["Uuid"]):
                 print("\tDeleted")
 
-    assert True is True
+    assert True
