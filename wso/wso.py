@@ -1349,8 +1349,4 @@ class WSO():
 
         return self.check_http_response(response)
 
-    # def bulk_command(self, command: str, macadress=None, udid=None, serial_number=None, imei_number=None):
-    #     if command in ["EnterpriseWipe", "LockDevice", "ScheduleOsUpdate", "SoftReset", "Shutdown"]:
-    #         return True
-    #     self.error("Invalid command")
-    #     return False
+    # TODO Add Bulk commands
