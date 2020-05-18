@@ -1,0 +1,255 @@
+{
+    "device_models":
+    [
+        {
+            "platform": "Android",
+            "device_model": "Android",
+            "model": 5
+        },
+        {
+            "platform": "Apple",
+            "device_model": "iPhone",
+            "model": 1
+        },
+        {
+            "platform": "Apple",
+            "device_model": "iPad",
+            "model": 2
+        },
+        {
+            "platform": "Apple",
+            "device_model": "iPod Touch",
+            "model": 3
+        },
+        {
+            "platform": "AppleOsX",
+            "device_model": "MacBook Pro",
+            "model": 14
+        },
+        {
+            "platform": "AppleOsX",
+            "device_model": "MacBook Air",
+            "model": 15
+        },
+        {
+            "platform": "AppleOsX",
+            "device_model": "Mac Mini",
+            "model": 16
+        },
+        {
+            "platform": "AppleOsX",
+            "device_model": "iMac",
+            "model": 30
+        },
+        {
+            "platform": "AppleOsX",
+            "device_model": "Mac Pro",
+            "model": 31
+        },
+        {
+            "platform": "AppleOsX",
+            "device_model": "MacBook",
+            "model": 35
+        },
+        {
+            "platform": "AppleTv",
+            "device_model": "Apple TV",
+            "model": 33
+        },
+        {
+            "platform": "AveryDennisonPrinter",
+            "device_model": "ADTP1",
+            "model": 39
+        },
+        {
+            "platform": "BlackBerry",
+            "device_model": "BlackBerry",
+            "model": 4
+        },
+        {
+            "platform": "BlackBerry",
+            "device_model": "BES Managed",
+            "model": 9
+        },
+        {
+            "platform": "BlackBerry10",
+            "device_model": "OtherBlackBerry10",
+            "model": 26
+        },
+        {
+            "platform": "BlackBerry10",
+            "device_model": "BlackBerryQ10",
+            "model": 28
+        },
+        {
+            "platform": "BlackBerry10",
+            "device_model": "BlackBerryZ10",
+            "model": 29
+        },
+        {
+            "platform": "ChromeBook",
+            "device_model": "Google Chrome Book",
+            "model": 43
+        },
+        {
+            "platform": "DatamaxONeilPrinter",
+            "device_model": "RL3",
+            "model": 40
+        },
+        {
+            "platform": "DatamaxONeilPrinter",
+            "device_model": "RL4",
+            "model": 41
+        },
+        {
+            "platform": "DatamaxONeilPrinter",
+            "device_model": "Generic",
+            "model": 42
+        },
+        {
+            "platform": "DatamaxONeilPrinter",
+            "device_model": "RL3e",
+            "model": 48
+        },
+        {
+            "platform": "DatamaxONeilPrinter",
+            "device_model": "RL4e",
+            "model": 49
+        },
+        {
+            "platform": "Qnx",
+            "device_model": "QNX",
+            "model": 37
+        },
+        {
+            "platform": "Symbian",
+            "device_model": "Symbian",
+            "model": 7
+        },
+        {
+            "platform": "Symbian",
+            "device_model": "Symbian",
+            "model": 7
+        },
+        {
+            "platform": "ToshibaPrinter",
+            "device_model": "B-EP4DL-G",
+            "model": 38
+        },
+        {
+            "platform": "ToshibaPrinter",
+            "device_model": "B-EP2DL-G",
+            "model": 44
+        },
+        {
+            "platform": "Tizen",
+            "device_model": "Tizen Mobile",
+            "model": 51
+        },
+        {
+            "platform": "WindowsMobile",
+            "device_model": "WindowsMobile",
+            "model": 6
+        },
+        {
+            "platform": "WindowsPc",
+            "device_model": "Windows PC",
+            "model": 10
+        },
+        {
+            "platform": "WindowsPhone",
+            "device_model": "WindowsPhone",
+            "model": 8
+        },
+        {
+            "platform": "WindowsPhone8",
+            "device_model": "Windows Phone 8",
+            "model": 17
+        },
+        {
+            "platform": "WinRT",
+            "device_model": "Windows 8.0",
+            "model": 22
+        },
+        {
+            "platform": "WinRT",
+            "device_model": "Windows 8.1",
+            "model": 32
+        },
+        {
+            "platform": "WinRT",
+            "device_model": "Windows 10",
+            "model": 50
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "QLn220",
+            "model": 18
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "QLn320",
+            "model": 19
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZT220",
+            "model": 20
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZT230",
+            "model": 21
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "QLn420",
+            "model": 23
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "iMZ220",
+            "model": 24
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "iMZ320",
+            "model": 25
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZD500R",
+            "model": 34
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZT210",
+            "model": 36
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZD500",
+            "model": 45
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZT410",
+            "model": 46
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZT420",
+            "model": 47
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZQ510",
+            "model": 52
+        },
+        {
+            "platform": "ZebraPrinter",
+            "device_model": "ZQ520",
+            "model": 53
+        }
+    ]
+}

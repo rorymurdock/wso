@@ -1,0 +1,473 @@
+{
+    "locales":
+    [
+        {
+            "locale_code": "ar",
+            "locale_description": "Arabic"
+         },
+         {
+            "locale_code": "bg",
+            "locale_description": "Bulgarian"
+         },
+         {
+            "locale_code": "ca",
+            "locale_description": "Catalan"
+         },
+         {
+            "locale_code": "cs",
+            "locale_description": "Czech"
+         },
+         {
+            "locale_code": "da",
+            "locale_description": "Danish"
+         },
+         {
+            "locale_code": "de",
+            "locale_description": "German"
+         },
+         {
+            "locale_code": "el",
+            "locale_description": "Greek"
+         },
+         {
+            "locale_code": "en",
+            "locale_description": "English"
+         },
+         {
+            "locale_code": "es",
+            "locale_description": "Spanish"
+         },
+         {
+            "locale_code": "fi",
+            "locale_description": "Finnish"
+         },
+         {
+            "locale_code": "fr",
+            "locale_description": "French"
+         },
+         {
+            "locale_code": "he",
+            "locale_description": "Hebrew"
+         },
+         {
+            "locale_code": "hu",
+            "locale_description": "Hungarian"
+         },
+         {
+            "locale_code": "is",
+            "locale_description": "Icelandic"
+         },
+         {
+            "locale_code": "it",
+            "locale_description": "Italian"
+         },
+         {
+            "locale_code": "ja",
+            "locale_description": "Japanese"
+         },
+         {
+            "locale_code": "ko",
+            "locale_description": "Korean"
+         },
+         {
+            "locale_code": "nl",
+            "locale_description": "Dutch"
+         },
+         {
+            "locale_code": "no",
+            "locale_description": "Norwegian"
+         },
+         {
+            "locale_code": "pl",
+            "locale_description": "Polish"
+         },
+         {
+            "locale_code": "pt",
+            "locale_description": "Portuguese"
+         },
+         {
+            "locale_code": "ro",
+            "locale_description": "Romanian"
+         },
+         {
+            "locale_code": "ru",
+            "locale_description": "Russian"
+         },
+         {
+            "locale_code": "hr",
+            "locale_description": "Croatian"
+         },
+         {
+            "locale_code": "sk",
+            "locale_description": "Slovak"
+         },
+         {
+            "locale_code": "sq",
+            "locale_description": "Albanian"
+         },
+         {
+            "locale_code": "sv",
+            "locale_description": "Swedish"
+         },
+         {
+            "locale_code": "ar-SA",
+            "locale_description": "Arabic (Saudi Arabia)"
+         },
+         {
+            "locale_code": "ar-IQ",
+            "locale_description": "Arabic (Iraq)"
+         },
+         {
+            "locale_code": "ar-EG",
+            "locale_description": "Arabic (Egypt)"
+         },
+         {
+            "locale_code": "ar-LY",
+            "locale_description": "Arabic (Libya)"
+         },
+         {
+            "locale_code": "ar-DZ",
+            "locale_description": "Arabic (Algeria)"
+         },
+         {
+            "locale_code": "ar-MA",
+            "locale_description": "Arabic (Morocco)"
+         },
+         {
+            "locale_code": "ar-TN",
+            "locale_description": "Arabic (Tunisia)"
+         },
+         {
+            "locale_code": "ar-OM",
+            "locale_description": "Arabic (Oman)"
+         },
+         {
+            "locale_code": "ar-YE",
+            "locale_description": "Arabic (Yemen)"
+         },
+         {
+            "locale_code": "ar-SY",
+            "locale_description": "Arabic (Syria)"
+         },
+         {
+            "locale_code": "ar-JO",
+            "locale_description": "Arabic (Jordan)"
+         },
+         {
+            "locale_code": "ar-LB",
+            "locale_description": "Arabic (Lebanon)"
+         },
+         {
+            "locale_code": "ar-KW",
+            "locale_description": "Arabic (Kuwait)"
+         },
+         {
+            "locale_code": "ar-AE",
+            "locale_description": "Arabic (U.A.E.)"
+         },
+         {
+            "locale_code": "ar-BH",
+            "locale_description": "Arabic (Bahrain)"
+         },
+         {
+            "locale_code": "ar-QA",
+            "locale_description": "Arabic (Qatar)"
+         },
+         {
+            "locale_code": "cs-CZ",
+            "locale_description": "Czech (Czech Republic)"
+         },
+         {
+            "locale_code": "da-DK",
+            "locale_description": "Danish (Denmark)"
+         },
+         {
+            "locale_code": "de-DE",
+            "locale_description": "German (Germany)"
+         },
+         {
+            "locale_code": "de-CH",
+            "locale_description": "German (Switzerland)"
+         },
+         {
+            "locale_code": "de-AT",
+            "locale_description": "German (Austria)"
+         },
+         {
+            "locale_code": "de-LU",
+            "locale_description": "German (Luxembourg)"
+         },
+         {
+            "locale_code": "de-LI",
+            "locale_description": "German (Liechtenstein)"
+         },
+         {
+            "locale_code": "el-GR",
+            "locale_description": "Greek (Greece)"
+         },
+         {
+            "locale_code": "en-US",
+            "locale_description": "English (United States)"
+         },
+         {
+            "locale_code": "en-GB",
+            "locale_description": "English (United Kingdom)"
+         },
+         {
+            "locale_code": "en-AU",
+            "locale_description": "English (Australia)"
+         },
+         {
+            "locale_code": "en-CA",
+            "locale_description": "English (Canada)"
+         },
+         {
+            "locale_code": "en-NZ",
+            "locale_description": "English (New Zealand)"
+         },
+         {
+            "locale_code": "en-IE",
+            "locale_description": "English (Ireland)"
+         },
+         {
+            "locale_code": "en-ZA",
+            "locale_description": "English (South Africa)"
+         },
+         {
+            "locale_code": "en-JM",
+            "locale_description": "English (Jamaica)"
+         },
+         {
+            "locale_code": "en-029",
+            "locale_description": "English (Caribbean)"
+         },
+         {
+            "locale_code": "en-BZ",
+            "locale_description": "English (Belize)"
+         },
+         {
+            "locale_code": "en-TT",
+            "locale_description": "English (Trinidad and Tobago)"
+         },
+         {
+            "locale_code": "en-ZW",
+            "locale_description": "English (Zimbabwe)"
+         },
+         {
+            "locale_code": "en-PH",
+            "locale_description": "English (Republic of the Philippines)"
+         },
+         {
+            "locale_code": "en-SG",
+            "locale_description": "English (Singapore)"
+         },
+         {
+            "locale_code": "en-MY",
+            "locale_description": "English (Malaysia)"
+         },
+         {
+            "locale_code": "en-IN",
+            "locale_description": "English (India)"
+         },
+         {
+            "locale_code": "es-MX",
+            "locale_description": "Spanish (Mexico)"
+         },
+         {
+            "locale_code": "es-ES",
+            "locale_description": "Spanish (Spain)"
+         },
+         {
+            "locale_code": "es-GT",
+            "locale_description": "Spanish (Guatemala)"
+         },
+         {
+            "locale_code": "es-CR",
+            "locale_description": "Spanish (Costa Rica)"
+         },
+         {
+            "locale_code": "es-PA",
+            "locale_description": "Spanish (Panama)"
+         },
+         {
+            "locale_code": "es-DO",
+            "locale_description": "Spanish (Dominican Republic)"
+         },
+         {
+            "locale_code": "es-VE",
+            "locale_description": "Spanish (Venezuela)"
+         },
+         {
+            "locale_code": "es-CO",
+            "locale_description": "Spanish (Colombia)"
+         },
+         {
+            "locale_code": "es-PE",
+            "locale_description": "Spanish (Peru)"
+         },
+         {
+            "locale_code": "es-AR",
+            "locale_description": "Spanish (Argentina)"
+         },
+         {
+            "locale_code": "es-EC",
+            "locale_description": "Spanish (Ecuador)"
+         },
+         {
+            "locale_code": "es-CL",
+            "locale_description": "Spanish (Chile)"
+         },
+         {
+            "locale_code": "es-UY",
+            "locale_description": "Spanish (Uruguay)"
+         },
+         {
+            "locale_code": "es-PY",
+            "locale_description": "Spanish (Paraguay)"
+         },
+         {
+            "locale_code": "es-BO",
+            "locale_description": "Spanish (Bolivia)"
+         },
+         {
+            "locale_code": "es-SV",
+            "locale_description": "Spanish (El Salvador)"
+         },
+         {
+            "locale_code": "es-HN",
+            "locale_description": "Spanish (Honduras)"
+         },
+         {
+            "locale_code": "es-NI",
+            "locale_description": "Spanish (Nicaragua)"
+         },
+         {
+            "locale_code": "es-PR",
+            "locale_description": "Spanish (Puerto Rico)"
+         },
+         {
+            "locale_code": "es-PS",
+            "locale_description": "Spanish (United States)"
+         },
+         {
+            "locale_code": "fr-FR",
+            "locale_description": "French (France)"
+         },
+         {
+            "locale_code": "fr-BE",
+            "locale_description": "French (Belgium)"
+         },
+         {
+            "locale_code": "fr-CA",
+            "locale_description": "French (Canada)"
+         },
+         {
+            "locale_code": "fr-CH",
+            "locale_description": "French (Switzerland)"
+         },
+         {
+            "locale_code": "fr-LU",
+            "locale_description": "French (Luxembourg)"
+         },
+         {
+            "locale_code": "fr-MC",
+            "locale_description": "French (Principality of Monaco)"
+         },
+         {
+            "locale_code": "he-IL",
+            "locale_description": "Hebrew (Israel)"
+         },
+         {
+            "locale_code": "it-IT",
+            "locale_description": "Italian (Italy)"
+         },
+         {
+            "locale_code": "it-CH",
+            "locale_description": "Italian (Switzerland)"
+         },
+         {
+            "locale_code": "ja-JP",
+            "locale_description": "Japanese (Japan)"
+         },
+         {
+            "locale_code": "ko-KR",
+            "locale_description": "Korean (Korea)"
+         },
+         {
+            "locale_code": "nl-NL",
+            "locale_description": "Dutch (Netherlands)"
+         },
+         {
+            "locale_code": "nl-BE",
+            "locale_description": "Dutch (Belgium)"
+         },
+         {
+            "locale_code": "pl-PL",
+            "locale_description": "Polish (Poland)"
+         },
+         {
+            "locale_code": "pt-BR",
+            "locale_description": "Portuguese (Brazil)"
+         },
+         {
+            "locale_code": "pt-PT",
+            "locale_description": "Portuguese (Portugal)"
+         },
+         {
+            "locale_code": "ru-RU",
+            "locale_description": "Russian (Russia)"
+         },
+         {
+            "locale_code": "sv-SE",
+            "locale_description": "Swedish (Sweden)"
+         },
+         {
+            "locale_code": "sv-FI",
+            "locale_description": "Swedish (Finland)"
+         },
+         {
+            "locale_code": "tr-TR",
+            "locale_description": "Turkish (Turkey)"
+         },
+         {
+            "locale_code": "zh-CN",
+            "locale_description": "Chinese - Simplified (People's Republic of China)"
+         },
+         {
+            "locale_code": "zh-SG",
+            "locale_description": "Chinese - Simplified (Singapore)"
+         },
+         {
+            "locale_code": "zh-CN",
+            "locale_description": "Chinese - Simplified (Taiwan)"
+         },
+         {
+            "locale_code": "zh-CN",
+            "locale_description": "Chinese - Simplified (Hong Kong S.A.R.)"
+         },
+         {
+            "locale_code": "zh-CN",
+            "locale_description": "Chinese - Simplified (Macao S.A.R.)"
+         },
+         {
+            "locale_code": "zh-TW",
+            "locale_description": "Chinese - Traditional (People's Republic of China)"
+         },
+         {
+            "locale_code": "zh-TW",
+            "locale_description": "Chinese - Traditional (Singapore)"
+         },
+         {
+            "locale_code": "zh-TW",
+            "locale_description": "Chinese - Traditional (Taiwan)"
+         },
+         {
+            "locale_code": "zh-HK",
+            "locale_description": "Chinese - Traditional (Hong Kong S.A.R.)"
+         },
+         {
+            "locale_code": "zh-TW",
+            "locale_description": "Chinese - Traditional (Macao S.A.R.)"
+         }
+    ]
+}

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wso",
-    version="1.0.2",
+    version="1.0.3",
     author="Rory Murdock",
     author_email="rory@itmatic.com.au",
     description="A Library for interacting with WSO UEM",
@@ -18,8 +18,5 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=[
-        'reqrest',
-        'basic_auth'
-        ],
+    install_requires=['reqrest', 'basic_auth'],
 )

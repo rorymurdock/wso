@@ -1,0 +1,515 @@
+{
+    "timezones":
+    [
+      {
+         "id": 74,
+         "timezone": "(GMT-12:00) International Date Line",
+         "code": "IDY"
+      },
+      {
+         "id": 73,
+         "timezone": "(GMT-11:00) American Samoa, Niue",
+         "code": "NUT"
+      },
+      {
+         "id": 10,
+         "timezone": "(GMT-10:00) Hawaii, Tahiti (French Polynesia)",
+         "code": "HST"
+      },
+      {
+         "id": 96,
+         "timezone": "(GMT-09:30) Marquesas Islands (French Polynesia)",
+         "code": "HST"
+      },
+      {
+         "id": 95,
+         "timezone": "(GMT-09:00) Gambier Islands (French Polynesia)",
+         "code": "HST"
+      },
+      {
+         "id": 7,
+         "timezone": "(GMT-09:00) Alaska",
+         "code": "AKST"
+      },
+      {
+         "id": 12,
+         "timezone": "(GMT-08:00) Pacific Time (US & Canada)",
+         "code": "PST"
+      },
+      {
+         "id": 88,
+         "timezone": "(GMT-08:00) Zona Noroeste (Mexico)",
+         "code": "PSTM"
+      },
+      {
+         "id": 11,
+         "timezone": "(GMT-07:00) Mountain Time (US & Canada)",
+         "code": "MST"
+      },
+      {
+         "id": 67,
+         "timezone": "(GMT-07:00) Arizona (US)",
+         "code": "MSTA"
+      },
+      {
+         "id": 68,
+         "timezone": "(GMT-07:00) Zona Pacífico (Mexico)",
+         "code": "CSTS"
+      },
+      {
+         "id": 63,
+         "timezone": "(GMT-06:00) Belize, Costa Rica, Guatemala, Honduras",
+         "code": "HNC"
+      },
+      {
+         "id": 65,
+         "timezone": "(GMT-06:00) Zona Centro (Mexico)",
+         "code": "CSTM"
+      },
+      {
+         "id": 66,
+         "timezone": "(GMT-06:00) Saskatchewan (Canada)",
+         "code": "CSTS"
+      },
+      {
+         "id": 9,
+         "timezone": "(GMT-06:00) Central Time (US & Canada)",
+         "code": "CST"
+      },
+      {
+         "id": 6,
+         "timezone": "(GMT-05:00) Eastern Time (US & Canada)",
+         "code": "EST"
+      },
+      {
+         "id": 60,
+         "timezone": "(GMT-05:00) Colombia, Ecuador, Peru",
+         "code": "COT"
+      },
+      {
+         "id": 62,
+         "timezone": "(GMT-05:00) Cayman Islands, Jamaica, Panama",
+         "code": "ESTC"
+      },
+      {
+         "id": 58,
+         "timezone": "(GMT-04:30) Venezuela",
+         "code": "VET"
+      },
+      {
+         "id": 59,
+         "timezone": "(GMT-04:00) Aruba, Barbados, Curaçao, Dominican Rep.",
+         "code": "ASTC"
+      },
+      {
+         "id": 8,
+         "timezone": "(GMT-04:00) Atlantic Time (Canada)",
+         "code": "AST"
+      },
+      {
+         "id": 92,
+         "timezone": "(GMT-04:00) Chile",
+         "code": "CLT"
+      },
+      {
+         "id": 93,
+         "timezone": "(GMT-04:00) Paraguay",
+         "code": "CLT"
+      },
+      {
+         "id": 86,
+         "timezone": "(GMT-04:00) Bermuda",
+         "code": "CLT"
+      },
+      {
+         "id": 87,
+         "timezone": "(GMT-04:00) Bolivia, Guyana",
+         "code": "BOT"
+      },
+      {
+         "id": 56,
+         "timezone": "(GMT-03:30) Newfoundland",
+         "code": "NST"
+      },
+      {
+         "id": 53,
+         "timezone": "(GMT-03:00) French Guiana, Suriname",
+         "code": "ADT"
+      },
+      {
+         "id": 54,
+         "timezone": "(GMT-03:00) Argentina",
+         "code": "ADTA"
+      },
+      {
+         "id": 55,
+         "timezone": "(GMT-03:00) Rio de Janeiro, Brazil",
+         "code": "WGT"
+      },
+      {
+         "id": 89,
+         "timezone": "(GMT-03:00) Nuuk (Central Greenland)",
+         "code": "WGST"
+      },
+      {
+         "id": 52,
+         "timezone": "(GMT-02:00) South Georgia and the South Sandwich Islands",
+         "code": "GST"
+      },
+      {
+         "id": 50,
+         "timezone": "(GMT-01:00) Azores",
+         "code": "AZOT"
+      },
+      {
+         "id": 51,
+         "timezone": "(GMT-01:00) Cape Verde",
+         "code": "CVT"
+      },
+      {
+         "id": 48,
+         "timezone": "(GMT) Burkina Faso, Côte d'Ivoire, Senegal, Iceland",
+         "code": "GMTA"
+      },
+      {
+         "id": 49,
+         "timezone": "(GMT) Portugal, Ireland, United Kingdom",
+         "code": "GMT"
+      },
+      {
+         "id": 97,
+         "timezone": "(GMT+00:00) Casablanca (Morocco)",
+         "code": "GMT"
+      },
+      {
+         "id": 85,
+         "timezone": "(GMT) Iceland",
+         "code": "GMTN"
+      },
+      {
+         "id": 83,
+         "timezone": "(GMT+01:00) Czech Rep., Poland, Slovakia",
+         "code": "CETE"
+      },
+      {
+         "id": 84,
+         "timezone": "(GMT+01:00) Namibia",
+         "code": "CETA"
+      },
+      {
+         "id": 43,
+         "timezone": "(GMT+01:00) Algeria, Angola, Congo, Nigeria, Tunisia",
+         "code": "WAT"
+      },
+      {
+         "id": 44,
+         "timezone": "(GMT+01:00) Albania, Croatia, Serbia, Slovenia",
+         "code": "CETS"
+      },
+      {
+         "id": 45,
+         "timezone": "(GMT+01:00) Andorra, France, Italy, Spain",
+         "code": "CETW"
+      },
+      {
+         "id": 46,
+         "timezone": "(GMT+01:00) Belgium, Germany, Netherlands, Switzerland",
+         "code": "CETC"
+      },
+      {
+         "id": 47,
+         "timezone": "(GMT+01:00) Denmark, Norway, Sweden",
+         "code": "CETN"
+      },
+      {
+         "id": 37,
+         "timezone": "(GMT+02:00) Bulgaria, Cyprus, Greece, Moldova, Romania",
+         "code": "EETE"
+      },
+      {
+         "id": 38,
+         "timezone": "(GMT+02:00) Israel",
+         "code": "IST"
+      },
+      {
+         "id": 39,
+         "timezone": "(GMT+02:00) Egypt",
+         "code": "EEET"
+      },
+      {
+         "id": 40,
+         "timezone": "(GMT+02:00) Estonia, Finland, Latvia, Lithuania",
+         "code": "EETN"
+      },
+      {
+         "id": 41,
+         "timezone": "(GMT+02:00) Mozambique, South Africa, Zimbabwe",
+         "code": "SAST"
+      },
+      {
+         "id": 42,
+         "timezone": "(GMT+02:00) Ukraine",
+         "code": "EETF"
+      },
+      {
+         "id": 82,
+         "timezone": "(GMT+02:00) Jordan, Lebanon, Syria",
+         "code": "EETS"
+      },
+      {
+         "id": 98,
+         "timezone": "(GMT+02:00) Tripoli (Libya)",
+         "code": "CETA"
+      },
+      {
+         "id": 91,
+         "timezone": "(GMT+03:00) Turkey",
+         "code": "EETS"
+      },
+      {
+         "id": 80,
+         "timezone": "(GMT+03:00) Moscow, St. Petersburg, Volgograd",
+         "code": "MSK"
+      },
+      {
+         "id": 81,
+         "timezone": "(GMT+03:00) Bahrain, Kuwait, Qatar, Saudi Arabia",
+         "code": "ASTA"
+      },
+      {
+         "id": 33,
+         "timezone": "(GMT+03:00) Belarus",
+         "code": "FET"
+      },
+      {
+         "id": 34,
+         "timezone": "(GMT+03:00) Madagascar",
+         "code": "EATM"
+      },
+      {
+         "id": 35,
+         "timezone": "(GMT+03:00) Ethiopia, Kenya, Tanzania",
+         "code": "EAT"
+      },
+      {
+         "id": 36,
+         "timezone": "(GMT+03:00) Iraq",
+         "code": "ASTI"
+      },
+      {
+         "id": 32,
+         "timezone": "(GMT+03:30) Iran",
+         "code": "IRST"
+      },
+      {
+         "id": 30,
+         "timezone": "(GMT+04:00) Azerbaijan",
+         "code": "AZT"
+      },
+      {
+         "id": 31,
+         "timezone": "(GMT+04:00) Mauritius, Oman, Seychelles, UAE",
+         "code": "GSTA"
+      },
+      {
+         "id": 29,
+         "timezone": "(GMT+04:30) Afghanistan",
+         "code": "AFT"
+      },
+      {
+         "id": 27,
+         "timezone": "(GMT+05:00) Pakistan",
+         "code": "PKT"
+      },
+      {
+         "id": 28,
+         "timezone": "(GMT+05:00) Maldives",
+         "code": "MVT"
+      },
+      {
+         "id": 79,
+         "timezone": "(GMT+05:00) Tajikistan, Turkmenistan, Uzbekistan",
+         "code": "UZT"
+      },
+      {
+         "id": 26,
+         "timezone": "(GMT+05:30) India, Sri Lanka",
+         "code": "INST"
+      },
+      {
+         "id": 25,
+         "timezone": "(GMT+05:45) Nepal",
+         "code": "NPT"
+      },
+      {
+         "id": 22,
+         "timezone": "(GMT+06:00) Bangladesh, Bhutan",
+         "code": "BST"
+      },
+      {
+         "id": 23,
+         "timezone": "(GMT+06:00) Astana (Kazakhstan)",
+         "code": "BTT"
+      },
+      {
+         "id": 24,
+         "timezone": "(GMT+06:00) Bishkek (Kyrgyzstan)",
+         "code": "KGT"
+      },
+      {
+         "id": 102,
+         "timezone": "(GMT+06:00) Omsk (Russia)",
+         "code": "OMST"
+      },
+      {
+         "id": 21,
+         "timezone": "(GMT+06:30) Burma, Cocos (Keeling) Is.",
+         "code": "MMT"
+      },
+      {
+         "id": 19,
+         "timezone": "(GMT+07:00) Novosibirsk",
+         "code": "OMST"
+      },
+      {
+         "id": 20,
+         "timezone": "(GMT+07:00) Jakarta, Thailand, Vietnam",
+         "code": "ICT"
+      },
+      {
+         "id": 14,
+         "timezone": "(GMT+08:00) Philippines",
+         "code": "PHT"
+      },
+      {
+         "id": 15,
+         "timezone": "(GMT+08:00) Singapore",
+         "code": "SGT"
+      },
+      {
+         "id": 16,
+         "timezone": "(GMT+08:00) Malaysia",
+         "code": "MAST"
+      },
+      {
+         "id": 17,
+         "timezone": "(GMT+08:00) Taiwan",
+         "code": "CSTT"
+      },
+      {
+         "id": 18,
+         "timezone": "(GMT+08:00) Beijing, Hong Kong, Macau (China)",
+         "code": "CSTC"
+      },
+      {
+         "id": 77,
+         "timezone": "(GMT+08:00) Perth (Australia)",
+         "code": "AWST"
+      },
+      {
+         "id": 78,
+         "timezone": "(GMT+08:00) Ulan Bator (Mongolia)",
+         "code": "ULAT"
+      },
+      {
+         "id": 13,
+         "timezone": "(GMT+09:00) Japan",
+         "code": "JST"
+      },
+      {
+         "id": 5,
+         "timezone": "(GMT+09:00) Chita, Yakutsk, Blagoveschensk",
+         "code": "YAKT"
+      },
+      {
+         "id": 69,
+         "timezone": "(GMT+09:00) Palau, Timor-Leste",
+         "code": "PWT"
+      },
+      {
+         "id": 70,
+         "timezone": "(GMT+09:00) Korea",
+         "code": "KST"
+      },
+      {
+         "id": 76,
+         "timezone": "(GMT+09:30) Darwin (Australia)",
+         "code": "CAST"
+      },
+      {
+         "id": 72,
+         "timezone": "(GMT+09:30) Adelaide (Australia)",
+         "code": "ACST"
+      },
+      {
+         "id": 90,
+         "timezone": "(GMT+10:00) Brisbane, Queensland, Australia",
+         "code": "AEST"
+      },
+      {
+         "id": 71,
+         "timezone": "(GMT+10:00) Guam, Port Moresby",
+         "code": "CHST"
+      },
+      {
+         "id": 61,
+         "timezone": "(GMT+10:00) Tasmania (Australia)",
+         "code": "AUSH"
+      },
+      {
+         "id": 57,
+         "timezone": "(GMT+10:00) Melbourne, Victoria, New South Wales",
+         "code": "AEST"
+      },
+      {
+         "id": 64,
+         "timezone": "(GMT+11:00) Bougainville (Papua New Guinea)",
+         "code": "PGT"
+      },
+      {
+         "id": 4,
+         "timezone": "(GMT+11:00) New Caledonia, Solomon Is., Vanuatu",
+         "code": "SBT"
+      },
+      {
+         "id": 2,
+         "timezone": "(GMT+12:00) Marshall Is., Tuvalu",
+         "code": "MHT"
+      },
+      {
+         "id": 3,
+         "timezone": "(GMT+12:00) Fiji",
+         "code": "NZ"
+      },
+      {
+         "id": 99,
+         "timezone": "(GMT+12:00) New Zealand",
+         "code": "NZ"
+      },
+      {
+         "id": 94,
+         "timezone": "(GMT+12:45) Chatham Islands",
+         "code": "CST"
+      },
+      {
+         "id": 101,
+         "timezone": "(GMT+13:00) Tokelau",
+         "code": "CHAST"
+      },
+      {
+         "id": 75,
+         "timezone": "(GMT+13:00) Samoa",
+         "code": "SOBT"
+      },
+      {
+         "id": 1,
+         "timezone": "(GMT+13:00) Tonga",
+         "code": "TKT"
+      },
+      {
+         "id": 100,
+         "timezone": "(GMT+14:00) Kiritimati Island",
+         "code": "LINT"
+      }
+    ]
+}

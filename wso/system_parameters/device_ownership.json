@@ -1,0 +1,17 @@
+{
+    "device_ownership":
+    [
+        {
+            "Ownership_ID": "C",
+            "Ownership_Type": "Corporate Owned"
+        },
+        {
+            "Ownership_ID": "S",
+            "Ownership_Type": "Corporate Shared"
+        },
+        {
+            "Ownership_ID": "E",
+            "Ownership_Type": "Employee Owned"
+        }
+    ]
+}
