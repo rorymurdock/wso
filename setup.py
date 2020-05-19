@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wso",
-    version="1.0.3",
+    version="1.0.4",
     author="Rory Murdock",
     author_email="rory@itmatic.com.au",
     description="A Library for interacting with WSO UEM",
@@ -19,4 +19,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=['reqrest', 'basic_auth'],
+    include_package_data=True
 )
