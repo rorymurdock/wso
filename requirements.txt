@@ -1,2 +1,2 @@
-reqrest>=0.0.8
+reqrest>=1.0.0
 basic-auth

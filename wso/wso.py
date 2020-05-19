@@ -818,7 +818,7 @@ class WSO():
             self.error('Group %s already exists' % name)
             return False
 
-        response = self.rest_v1.post('/api/mdm/smartgroups/', payload=payload)
+        response = self.rest_v1.post('/api/mdm/smartgroups/', json=payload)
 
         if self.check_http_response(response):
             print('Group %s created successfully, id: %s' %
@@ -1021,7 +1021,7 @@ class WSO():
 
         response = self.rest_v1.post('/api/mdm/tags/%i/%sdevices' %
                                      (tag_id, action),
-                                     payload=payload)
+                                     json=payload)
 
         return self.check_http_response(response)
 
@@ -1056,7 +1056,7 @@ class WSO():
         payload['TagName'] = tagname
         payload['TagType'] = tagtype
 
-        response = self.rest_v1.post("/api/mdm/tags/addtag", payload)
+        response = self.rest_v1.post("/api/mdm/tags/addtag", json=payload)
 
         if self.check_http_response(response):
             return json.loads(response.text)['Value']
@@ -1191,7 +1191,7 @@ class WSO():
                         return False
 
         response = self.rest_v2.post("/api/system/groups/%i" % parentog_id,
-                                     payload=payload)
+                                     json=payload)
 
         if self.check_http_response(response):
             return self.str_to_json(response.text)
@@ -1224,7 +1224,7 @@ class WSO():
         payload['ProductID'] = product_id
 
         response = self.rest_v1.post('/api/mdm/products/reprocessProduct',
-                                     payload=payload)
+                                     json=payload)
 
         return self.check_http_response(response)
 
@@ -1280,7 +1280,7 @@ class WSO():
         if not product_name:
             self.debug("Product %s does not exist" % name)
 
-            response = self.rest_v1.post('/api/mdm/products/create', payload)
+            response = self.rest_v1.post('/api/mdm/products/create', json=payload)
 
             if self.check_http_response(response):
                 return self.str_to_json(response.text)['Value']

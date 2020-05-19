@@ -1,0 +1,2 @@
+recursive-include wso/system_parameters *.json
+prune tests

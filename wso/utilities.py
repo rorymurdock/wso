@@ -1,6 +1,7 @@
 """A collection of utilities used in WSO"""
 import sys
 import json
+import pkg_resources
 from basic_auth import Auth
 
 CONFIG_FILES = {
@@ -19,9 +20,11 @@ class Utils:
 
     def __init__(self):
         for file in CONFIG_FILES:
-            if not Auth(config_dir="wso/system_parameters").check_file_exists(
+            path = 'system_parameters/'  # always use slash
+            filepath = pkg_resources.resource_filename(__name__, path)
+            if not Auth(config_dir=filepath).check_file_exists(
                     CONFIG_FILES[file]):
-                sys.exit("Unable to load file %s" % file)
+                sys.exit("Unable to load file %s/%s" % (filepath, CONFIG_FILES[file]))
 
     def check_key(self, t_key, value, file):
         """A varible function to check the keys of a json for a value"""
