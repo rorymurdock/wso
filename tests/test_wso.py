@@ -36,11 +36,15 @@ PRODUCT_ACTION_TYPE_ID = 5
 PRODUCT_PLATFORM_ID = 5
 
 # Device serial and IP
-TEST_DEVICE_SERIAL = 17142522504057
-TEST_DEVICE_IP = '172.16.0.143'
-TEST_DEVICE_ID = 14229
-TEST_DEVICE_FRIENDLY_NAME = 'pytest Android_TC51_null 4057'
-TEST_DEVICE_LAST_SEEN = '07-03-2019 22:14:26.290'
+TEST_DEVICE_SERIAL = 17149522502619
+TEST_DEVICE_IP = '172.20.10.3'
+TEST_DEVICE_ID = 19166
+TEST_DEVICE_FRIENDLY_NAME = 'DO_NOT_DELETE pytest Android_TC51_ 2619'
+TEST_DEVICE_LAST_SEEN = '2020-07-01T11:21:30.030'
+TEST_DEVICE_LAST_SEEN_PRODUCT = '07-01-2020 11:21:30.030'
+TEST_DEVICE_UUID = '7efcd55b-8193-4036-bf3a-925aa81327c0'
+TEST_DEVICE_UDID = 'c37f6886ab8119f1ea5160a0e900b801'
+TEST_DEVICE_ENROLLMENT_DATE = "2020-07-01T11:05:44.790"
 
 OG_TO_MOVE_TO = 'Staged'
 
@@ -418,7 +422,7 @@ def test_device_counts():
     assert counts["Ownership"]["Undefined"] == 1
     assert counts["Platforms"]["Android"] == 1
     assert counts["Security"]["Compromised"] == 0
-    assert counts["Security"]["NoPasscode"] == 0
+    assert counts["Security"]["NoPasscode"] == 1
     assert counts["Security"]["NotEncrypted"] == 0
     assert counts["TotalDevices"] == 1
 
@@ -435,7 +439,7 @@ def test_find_group():
     """Test finding a group"""
     group = UEM.find_group(name=TEST_GROUP_NAME)
 
-    assert group["SmartGroups"][0]["SmartGroupID"] == 8686
+    assert group["SmartGroups"][0]["SmartGroupID"] == TEST_GROUP_ID
     assert group["SmartGroups"][0]["Devices"] == 1
 
 
@@ -496,7 +500,7 @@ def test_get_product_device_state():
     device['DeviceId'] = TEST_DEVICE_ID
     device['Name'] = TEST_DEVICE_FRIENDLY_NAME
     device['LastJobStatus'] = 'NoJobs'
-    device['LastSeen'] = TEST_DEVICE_LAST_SEEN
+    device['LastSeen'] = TEST_DEVICE_LAST_SEEN_PRODUCT
 
     devices['Devices'].append(device)
     devices['Page'] = 0
@@ -623,15 +627,15 @@ def test_get_device_extensive():
     response = UEM.get_device_extensive(device_id=device_id)['Devices'][0]
 
     assert response['DeviceId'] == TEST_DEVICE_ID
-    assert response['DeviceUuid'] == 'a9f524fc-f9c8-4f64-9992-140944b16abe'
-    assert response['Udid'] == '433f4189881517307f0431ac622558be'
+    assert response['DeviceUuid'] == TEST_DEVICE_UUID
+    assert response['Udid'] == TEST_DEVICE_UDID
     assert response['SerialNumber'] == str(TEST_DEVICE_SERIAL)
     assert response['DeviceFriendlyName'] == TEST_DEVICE_FRIENDLY_NAME
     assert response['UserName'] == 'pytest_enrol'
-    assert response['LastSeen'] == '2019-07-03T22:14:26.290'
-    assert response['EnrollmentDate'] == '2019-06-19T11:42:11.580'
+    assert response['LastSeen'] == TEST_DEVICE_LAST_SEEN
+    assert response['EnrollmentDate'] == TEST_DEVICE_ENROLLMENT_DATE
     assert response['Compliant'] is True
-    assert response['AssetNumber'] == '433f4189881517307f0431ac622558be'
+    assert response['AssetNumber'] == TEST_DEVICE_UDID
     assert response['EnrollmentStatus'] == 'Enrolled'
     assert response['SmartGroups'][0]['SmartGroupId'] == 1155
     assert response['SmartGroups'][0][

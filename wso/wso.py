@@ -72,6 +72,15 @@ class WSO():
                             debug=debug,
                             timeout=9999)
 
+        # Create v3 API object
+        headers_v3 = self.create_headers(version=2)
+
+        self.rest_v3 = REST(url=self.config['url'],
+                            headers=headers_v3,
+                            proxy=self.import_proxy(),
+                            debug=debug,
+                            timeout=9999)
+
         self.utils = Utils()
 
     def configure(self):
@@ -132,6 +141,7 @@ class WSO():
         status_codes = {}
         status_codes[200] = True, 'HTTP 200: OK'
         status_codes[201] = True, 'HTTP 201: Created'
+        status_codes[202] = True, 'HTTP 202: Accepted'
         status_codes[204] = True, 'HTTP 204: Empty Response'
         status_codes[400] = False, 'HTTP 400: Bad Request'
         status_codes[401] = False, 'HTTP 401: Check WSO Credentials'
@@ -1111,7 +1121,7 @@ class WSO():
             '/api/mdm/devices/commands/changeorganizationgroup',
             querystring=querystring)
 
-        return self.check_http_response(response)
+        return self.check_http_response(response, 202)
 
     def format_og_payload(self,
                           name: str,
@@ -1280,7 +1290,8 @@ class WSO():
         if not product_name:
             self.debug("Product %s does not exist" % name)
 
-            response = self.rest_v1.post('/api/mdm/products/create', json=payload)
+            response = self.rest_v1.post('/api/mdm/products/create',
+                                         json=payload)
 
             if self.check_http_response(response):
                 return self.str_to_json(response.text)['Value']
@@ -1348,5 +1359,69 @@ class WSO():
             '/api/mdm/devices/%s/enrollmentuser/%s' % (device_id, user_id), "")
 
         return self.check_http_response(response)
+
+    def delete_device(self, device_id):
+        """Delete a device using the device ID"""
+        response = self.rest_v1.delete('/api/mdm/devices/%s' % device_id)
+        self.warning("%s has been deleted" % device_id)
+
+        return self.check_http_response(response, 200)
+
+    def action(self, action: str, _id, id_type):
+        """Performs an action on a device"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        actions = []
+        actions.append('Lock')
+        actions.append('EnterpriseWipe')
+        actions.append('DeviceWipe')
+        actions.append('DeviceQuery')
+        actions.append('ClearPasscode')
+        actions.append('SyncDevice')
+        actions.append('EnterpriseReset')
+
+        if action not in actions:
+            self.error("Invalid action: %s" % action)
+            return False
+
+        self.info("Performing %s on %s" % (action, _id))
+        querystring = self.querystring(searchBy=id_type,
+                                       id=_id,
+                                       command="EnterpriseWipe")
+
+        response = self.rest_v1.post('/api/mdm/devices/commands',
+                                     querystring=querystring)
+
+        return response
+
+    def enterprise_wipe(self,
+                        macaddress=None,
+                        udid=None,
+                        serial_number=None,
+                        imei=None):
+        """Enterprise wipe a device"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        # Map ids against the WSO format
+        ids = {}
+        ids["Macaddress"] = macaddress
+        ids["Udid"] = udid
+        ids["Serialnumber"] = serial_number
+        ids["ImeiNumber"] = imei
+
+        _id = None
+
+        for _query in ids:
+            if ids[_query] is not None:
+                _id = _query
+                break
+
+        if _id is None:
+            self.error("No device search parameters speficied")
+            return False
+
+        response = self.action("EnterpriseWipe", ids[_id], _id)
+
+        return self.check_http_response(response, 202)
 
     # TODO Add Bulk commands
