@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wso",
-    version="1.0.6",
+    version="1.0.7",
     author="Rory Murdock",
     author_email="rory@itmatic.com.au",
     description="A Library for interacting with WSO UEM",

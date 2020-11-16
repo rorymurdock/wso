@@ -44,13 +44,33 @@ class WSO():
 
         # Get config
         self.config_dir = config_dir
-        self.config = Auth(config_dir).read_config(config_file)
 
+        # Check both env vars and local config files
+        # If neither then fall back to interactive and creating the file
+        self.config = False
+        env_vars = Config().get_env_vars()
+        local_config = Auth(config_dir).read_config(config_file)
+
+        if env_vars:
+            self.config = env_vars
+        elif local_config:
+            self.config = local_config
+
+        # Check if a config has be found
         if not self.config:
-            self.critical("Unable to get config, run configure.py")
+            # Run the config in interactive mode
+            self.critical(
+                "Unable to get config, run configure.py or set env vars")
             self.configure()
-            self.critical("Run again to use config")
-            sys.exit(1)
+
+            # Check the local config again after running interactive
+            local_config = Auth(config_dir).read_config(config_file)
+            if local_config:
+                self.config = local_config
+            else:
+                # Shouldn't get here but just in case
+                self.critical("Run again to use config")
+                sys.exit(1)
 
         self.info("Imported config - %s" % self.info_sensitive(self.config))
 
@@ -1425,3 +1445,32 @@ class WSO():
         return self.check_http_response(response, 202)
 
     # TODO Add Bulk commands
+
+    def find_admin(self,
+                   firstname=None,
+                   lastname=None,
+                   email=None,
+                   organizationgroupid=None,
+                   role=None,
+                   username=None,
+                   status=None,
+                   page=0,
+                   pagesize=500
+                   ):
+        """Search for admins"""
+        self.info("args: %s" % self.filter_locals(locals()))
+
+        # Set base URL
+        url = '/api/system/admins/search'
+
+        querystring = self.querystring(status=status,
+                            firstname=firstname,
+                            lastname=lastname,
+                            email=email,
+                            organizationgroupid=organizationgroupid,
+                            role=role,
+                            username=username,
+                            pagesize=pagesize,
+                            page=page)
+
+        return self.simple_get(url, querystring, 1)

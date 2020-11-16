@@ -24,7 +24,8 @@ class Utils:
             filepath = pkg_resources.resource_filename(__name__, path)
             if not Auth(config_dir=filepath).check_file_exists(
                     CONFIG_FILES[file]):
-                sys.exit("Unable to load file %s/%s" % (filepath, CONFIG_FILES[file]))
+                sys.exit("Unable to load file %s/%s" %
+                         (filepath, CONFIG_FILES[file]))
 
     def check_key(self, t_key, value, file):
         """A varible function to check the keys of a json for a value"""

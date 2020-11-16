@@ -1,4 +1,5 @@
 """Configure Auth for WSO UEM"""
+import os
 import argparse
 import logging
 from basic_auth import Auth
@@ -127,6 +128,20 @@ class Config():
         args = parser.parse_args()
 
         return args
+
+    def get_env_vars(self):
+        envars = ["AW_URL", "AW_CREDENTIALS", "AW_TENANT_CODE"]
+
+        for var in envars:
+            if os.getenv(var) is None or os.getenv(var) == "":
+                return False
+        config = {}
+
+        config['url'] = os.getenv('AW_URL')
+        config['authorization'] = ("Basic %s" % os.getenv('AW_CREDENTIALS'))
+        config['aw-tenant-code'] = os.getenv('AW_TENANT_CODE')
+
+        return config
 
     def main(self, args):
         """Main function"""
